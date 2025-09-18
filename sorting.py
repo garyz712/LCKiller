@@ -1,0 +1,188 @@
+from typing import List
+
+def selectionSort(nums: List[int]) -> None:
+        for i in range(len(nums)):
+            smallest = i
+            for j in range(i+1,len(nums)):
+                if nums[j]<nums[smallest]:
+                    smallest = j
+            nums[i], nums[smallest] = nums[smallest], nums[i]
+
+            
+def insertionSort(nums: List[int]) -> None:
+        for i in range(1,len(nums)):
+            j = i
+            while j>0 and nums[j] < nums[j-1]:
+                nums[j],nums[j-1] = nums[j-1],nums[j]
+                j-=1
+
+def quicksortNaive(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left  = [x for x in arr if x < pivot]
+    mid   = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    return quicksortNaive(left) + mid + quicksortNaive(right)
+                
+def partition(l, r, nums):
+    # Last element will be the pivot and the first element is the pointer
+    pivot, ptr = nums[r], l # pointer is the first element that is larger than the pivot
+    for i in range(l, r): # do not include the pivot because it needs to be processed separately
+        if nums[i] <= pivot: # move the smaller numbers to the left hand side in their original order
+            nums[i], nums[ptr] = nums[ptr], nums[i]
+            ptr += 1
+    nums[ptr], nums[r] = nums[r], nums[ptr] #last prt cannot increase, move the pivot after the last smaller number 
+    return ptr #return the pivot position
+ 
+def quicksort(l, r, nums):
+    if len(nums) == 1: 
+        return 
+    if l < r:
+        pi = partition(l, r, nums)
+        quicksort(l, pi-1, nums) 
+        quicksort(pi+1, r, nums) 
+
+
+
+
+def merge(arr, l, m, r):
+    n1 = m - l + 1
+    n2 = r - m
+ 
+    # create temp arrays
+    L = [0] * (n1)
+    R = [0] * (n2)
+ 
+    # Copy data to temp arrays L[] and R[]
+    for i in range(0, n1):
+        L[i] = arr[l + i]
+ 
+    for j in range(0, n2):
+        R[j] = arr[m + 1 + j]
+ 
+    # Merge the temp arrays back into arr[l..r]
+    i = 0     # Initial index of first subarray
+    j = 0     # Initial index of second subarray
+    k = l     # Initial index of merged subarray
+ 
+    while i < n1 and j < n2:
+        if L[i] <= R[j]:
+            arr[k] = L[i]
+            i += 1
+        else:
+            arr[k] = R[j]
+            j += 1
+        k += 1
+ 
+    # Copy the remaining elements of L[], if there
+    # are any
+    while i < n1:
+        arr[k] = L[i]
+        i += 1
+        k += 1
+ 
+    # Copy the remaining elements of R[], if there
+    # are any
+    while j < n2:
+        arr[k] = R[j]
+        j += 1
+        k += 1
+ 
+# l is for left index and r is right index of the
+# sub-array of arr to be sorted
+ 
+ 
+def mergeSort(arr, l, r):
+    if l < r:
+ 
+        # Same as (l+r)//2, but avoids overflow for
+        # large l and h
+        m = l+(r-l)//2
+ 
+        # Sort first and second halves
+        mergeSort(arr, l, m)
+        mergeSort(arr, m+1, r)
+        merge(arr, l, m, r)
+
+def minimumSwaps(popularity):
+    n = len(popularity)
+
+    # Step 1: Create a list of tuples (index, value)
+    indexed = list(enumerate(popularity))
+    print(indexed)
+
+    # Step 2: Sort by value descending, keeping track of original indices
+    indexed.sort(key=lambda x: -x[1])
+    print(indexed)
+
+    visited = [False] * n
+    swaps = 0
+
+    # Step 3: Traverse the array to find cycles
+    for i in range(n):
+        # If already in the correct position or visited, skip
+        if visited[i] or indexed[i][0] == i:
+            continue
+
+        # Find the size of the cycle
+        cycle_size = 0
+        j = i
+
+        while not visited[j]:
+            visited[j] = True
+            j = indexed[j][0]
+            cycle_size += 1
+
+        if cycle_size > 1:
+            swaps += (cycle_size - 1)
+
+    return swaps
+
+# Example
+popularity = [3, 4, 1, 2]
+popularity = [4, 3, 1, 5, 2]
+print(minimumSwaps(popularity))  # Output: 2
+
+
+#merge sort linked list
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def mergeSort(head):
+    if not head or not head.next:  # base case
+        return head
+    
+    # Step 1: split into halves
+    slow, fast = head, head.next
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    
+    mid = slow.next
+    slow.next = None  # cut the list
+    
+    # Step 2: sort both halves
+    left = mergeSort(head)
+    right = mergeSort(mid)
+    
+    # Step 3: merge sorted halves
+    return merge(left, right)
+
+def merge(l1, l2):
+    dummy = ListNode(0)
+    tail = dummy
+    
+    while l1 and l2:
+        if l1.val < l2.val:
+            tail.next = l1
+            l1 = l1.next
+        else:
+            tail.next = l2
+            l2 = l2.next
+        tail = tail.next
+    
+    tail.next = l1 or l2  # attach the remainder
+    return dummy.next
