@@ -349,6 +349,22 @@ class Solution:
                 row -= 1
         return count
     
+
+class Solution:
+    #2D quasi-binary search for matrix O(n+m) ~ O(sqrt(N)) instead of O(log N^2)
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+
+        row, col = 0, len(matrix[0])-1
+
+        while row<len(matrix) and col>=0:
+            if matrix[row][col]==target:
+                return True
+            elif matrix[row][col]>target:
+                col-=1
+            else:
+                row+=1
+        return False
+
 class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
         if len(nums1) > len(nums2): #assume A is shorter than B so the left half hold the median when n+m is odd
