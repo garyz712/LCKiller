@@ -1,4 +1,4 @@
-# Leetcode is stupid, but we can crack it fast.
+# Asking Leetcode is stupid, but we can crack it fast.
 
 A collection of algorithm implementations in Python covering various computer science topics.
 
