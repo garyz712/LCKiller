@@ -8,7 +8,7 @@ class Trie:
         self.root = TrieNode()
     
     def insert(self, word: str) -> None:
-        node=self.root
+        node=self.root # use a current pointer for the node
         for c in word:
             if c not in node.children:
                 node.children[c] = TrieNode()
@@ -16,7 +16,7 @@ class Trie:
         node.is_end = True
 
     def search(self, word: str) -> bool:
-        node=self.root
+        node=self.root # use a current pointer for the node
         for c in word:
             if c not in node.children:
                 return False               
@@ -24,7 +24,7 @@ class Trie:
         return node.is_end #return True if node.is_end else False
         
     def startsWith(self, prefix: str) -> bool:
-        node=self.root
+        node=self.root # use a current pointer for the node
         for c in prefix:
             if c not in node.children:
                 return False               
@@ -38,6 +38,49 @@ class Trie:
 # obj.insert(word)
 # param_2 = obj.search(word)
 # param_3 = obj.startsWith(prefix)
+
+#DFS on Trie
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.isWord = False
+
+class WordDictionary:
+    def __init__(self):
+        self.root = TrieNode()
+    
+    def addWord(self, word: str) -> None:
+        node = self.root
+        for char in word:
+            if char not in node.children:#avoid overwritten
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.isWord = True
+#----------------- standard trie design above -----------------
+    def search(self, word: str) -> bool:
+        node = self.root
+
+        def recursionSearch(j, node): #pass the current char and node to continue the search
+            for i in range(j, len(word)):#start the search on word[j]
+                if word[i] == ".":
+                    for n in node.children.values():
+                        if recursionSearch(i+1, n):
+                            return True
+                    return False # if search fails on all children return false                          
+                else:
+                    if word[i] in node.children:
+                        node = node.children[word[i]]
+                    else:
+                        return False
+            return node.isWord
+
+        return recursionSearch(0, node)
+
+
+# Your WordDictionary object will be instantiated and called as such:
+# obj = WordDictionary()
+# obj.addWord(word)
+# param_2 = obj.search(word)
 
 
 

@@ -31,6 +31,26 @@ def rob(nums):
 
     return prev2
 
+
+#multi var DP + Kadane algo
+class Solution:
+    def maxSubarraySumCircular(self, nums: List[int]) -> int:
+        globMax, globMin = nums[0], nums[0]
+        curMax, curMin = 0, 0
+
+        total = 0
+
+        for n in nums:
+            curMax = max(curMax+n, n) #the maximum sum including the current n
+            curMin = min(curMin+n, n) #the minimum sum including the current n
+            total+=n
+            globMax = max(globMax, curMax)
+            globMin = min(globMin, curMin)
+
+        return max(globMax, total-globMin) if globMax>0 else globMax #if all nums are negative, total-globMin will be 0>globMax -> wrong! -> globMax
+
+
+        
 # 1D DP: Why two loops?
 # Because at each amount i, you have MULTIPLE ways to reach it, depending on coin denominations.
 
