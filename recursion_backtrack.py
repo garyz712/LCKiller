@@ -14,6 +14,37 @@ class Solution:
             return half*half #from O(n) -> O(logn) calls using O(logn) memory
         else:
             return self.myPow(x, n-1)*self.myPow(x, 1)
+class Solution:
+    def subsetsRecur(self, nums: List[int]) -> List[List[int]]:
+        ans= []
+        def dfs(s, i):
+            if i==len(nums):
+                ans.append(s) #must append a copy because s will be modified later
+                return
+
+            dfs(s[:], i+1) #same s as below
+            s.append(nums[i]) 
+            dfs(s[:], i+1)
+
+        dfs([], 0)
+        return ans
+
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        ans= []
+        subset = []#if using backtrack, no need to pass this as copy
+        def dfs(i):
+            if i==len(nums):
+                ans.append(subset[:]) #must append a copy because s will be modified later
+                #print(ans)
+                return
+
+            dfs(i+1) #same s as below
+            subset.append(nums[i]) 
+            dfs(i+1)
+            subset.pop() # must use backtrack to pop from s because this s is the same as the previously passed s
+        dfs(0)
+        return ans
+        
         
 class Solution:
     def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
