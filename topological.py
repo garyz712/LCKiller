@@ -316,3 +316,31 @@ class Solution:
                     queue.append(nei)
         
         return result == org
+
+class Solution:
+    def minimumSemesters(self, n: int, relations: List[List[int]]) -> int:
+        inorder = [0] * n
+        graph = defaultdict(list) #{} is wrong because some courses does not have next course
+
+        for a,b in relations:
+            if a in graph:
+                graph[a].append(b)              
+            else:
+                graph[a] = [b]
+            inorder[b-1]+=1
+
+        queue = deque([i+1 for i in range(len(inorder))if inorder[i]==0])
+        res=0
+        total=0
+        while queue:
+            for i in range(len(queue)):
+                course = queue.popleft()
+                total+=1
+                for nxt in graph[course]:
+                    inorder[nxt-1] -=1
+                    if inorder[nxt-1]==0: #this ensure that a course will be added to the queue only once
+                        queue.append(nxt)
+            res+=1
+        #print(total)
+        return res if total==n else -1
+
