@@ -304,3 +304,18 @@ class Solution:
         return res
 
         
+# hash map for prefix sum
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        res= 0
+        curSum =0 
+        prefixSum = collections.defaultdict(int)
+        prefixSum[0]=1 #Every array must has a prefix sum subarray = 0, so when curSum = k the whole array will be counted
+
+        for i in nums:
+            curSum+=i
+            res += prefixSum[curSum-k] #prefix sum upto current number - some previous prefix sum = k
+
+            prefixSum[curSum] +=1
+        #print(prefixSum)
+        return res
