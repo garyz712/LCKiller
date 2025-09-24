@@ -328,3 +328,23 @@ class Solution:
         return res
 
                 
+
+# decreasing deque storing idx + sliding window
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        ans = []
+        queue = collections.deque() #must store idx instead of values because you have to know where is the queue[0] comming from to decide if it is still in bound
+        for i in range(len(nums)):
+            if queue and queue[0] == i-k: # if the leftmost queue is out of bound
+                queue.popleft() #remove the leftmost element
+
+            #pop queue to ensure it is decreasing
+            while queue and nums[queue[-1]]<nums[i]:
+                queue.pop()
+            
+            queue.append(i) #put the current number idx into the queue
+           
+            if i>=k-1:
+                ans.append(nums[queue[0]]) #adding the answer (the left most num in queue)
+            #print(queue)
+        return ans
