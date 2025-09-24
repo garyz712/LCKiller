@@ -544,3 +544,47 @@ class SnapshotArray:
 # obj.set(index,val)
 # param_2 = obj.snap()
 # param_3 = obj.get(index,snap_id)
+
+
+
+# bisect practice
+# bisect_left(a, x):
+# Returns the leftmost index where x can be inserted in sorted list a to maintain order.
+
+# If x already exists, you get the index of the first occurrence.
+
+# bisect_right(a, x) (alias bisect.bisect):
+# Returns the rightmost index where x can be inserted to maintain order.
+
+# If x already exists, you get the index after the last occurrence.
+# bisect_left(a, x) → returns the index of the first element ≥ x
+# bisect_right(a, x) → returns the index of the first element > x
+
+class Solution:
+    def successfulPairs(self, spells: List[int], potions: List[int], success: int) -> List[int]:
+        ans = []
+        potions.sort()
+
+        def binarysearch(spl):
+            left, right = 0, len(potions)-1
+
+            while left<right:
+                mid = (left+right)//2
+                if potions[mid] * spl < success:
+                    left= mid+1
+                else:
+                    right=mid
+            return right if potions[right]*spl>=success else -1
+
+        for spell in spells:
+            idx = bisect.bisect_left(potions, success/spell)
+            ans.append(len(potions) - idx)# if idx ==0, all numbers in potions are successful; elif idx==len(potions), 0 number is successful 
+
+            #idx = binarysearch(spell)
+            
+            # if idx==-1:
+            #     ans.append(0)
+            # else:
+            #     ans.append(len(potions) - idx)
+        return ans
+        
