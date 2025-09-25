@@ -588,3 +588,35 @@ class Solution:
             #     ans.append(len(potions) - idx)
         return ans
         
+
+
+# Unsorted Binary Search, search in the answer space for number count
+# find the first element in the nums where number of number smaller than this element is greater 
+class Solution:
+    def findDuplicate1(self, nums: List[int]) -> int:
+        left, right = 1, len(nums)-1
+        while left<right:
+            mid = (left+right)//2
+            if mid >= sum([mid>=i for i in nums]): #count of number that is smaller than or equal to mid
+                left = mid + 1
+            else:
+                right = mid
+        return right
+
+    # Two pointer Floyd algorithm
+    def findDuplicate(self, nums):
+        # Find the intersection point of the two runners.
+        slow = fast = nums[0]
+        while True:
+            slow = nums[slow]
+            fast = nums[nums[fast]]
+            if slow == fast:
+                break
+        
+        # Find the "entrance" to the cycle.
+        slow2 = nums[0]
+        while slow != slow2:
+            slow = nums[slow]
+            slow2 = nums[slow2]
+        
+        return slow
