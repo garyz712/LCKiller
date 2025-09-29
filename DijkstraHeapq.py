@@ -213,3 +213,24 @@ class Solution:
 
         return w
 
+
+
+# practice for minheap, sorted, zip, gready
+class Solution:
+    def maxScore(self, nums1: List[int], nums2: List[int], k: int) -> int:
+        pairs = [(n1, n2) for n1, n2 in zip(nums1, nums2)]
+        pairs = sorted(pairs, key = lambda p: p[1], reverse = True)
+        minheap = []
+        res = 0
+        n1Sum = 0
+
+        for n1, n2 in pairs:
+            n1Sum+=n1
+            heapq.heappush(minheap, n1) #store new n1 value in the heap
+
+            if len(minheap) > k: #if heap is longer than enough, pop and update answer
+                n1Sum-=heapq.heappop(minheap) #pop the smallest number in the heap and subtract from the current sum
+                res = max(res, n2*(n1Sum))
+            elif len(minheap) == k:#if heap reach k, update result
+                res = max(res, n2*(n1Sum))
+        return res

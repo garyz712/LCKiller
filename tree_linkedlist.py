@@ -562,3 +562,26 @@ class Solution:
         head.next.next = head # connect the tail of the reversed sublist to the current head
         head.next = None #pointing the new tail to None instead of the list
         return newHead
+
+
+# DFS + binary tree
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+        res = 0 #store the final diameter answer
+        def dfs(r): # return the height of the current root
+            nonlocal res
+            if r == None:
+                return -1
+            left = dfs(r.left) #get the height of the left node
+            right = dfs(r.right)
+        
+            res = max(left + right + 2, res)
+
+            return max(left, right) +1 #return its own height
+        dfs(root)
+        return res
