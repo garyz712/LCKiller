@@ -30,6 +30,20 @@ def rob(nums):
         prev2 = curr
 
     return prev2
+    
+#multi var DP + Kadane algo
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        currMaxProd = 1
+        currMinProd = 1
+        globProd = -float("inf")
+        
+        for n in nums:
+            temp = max(max(currMaxProd*n, currMinProd*n), n)
+            currMinProd = min(min(currMaxProd*n, currMinProd*n), n) #need to save the current minimum because if they are negative and the current number is negative as well, they can also contribute to the maximum product. 
+            currMaxProd = temp
+            globProd = max(globProd, currMaxProd)
+        return globProd
 
 
 #multi var DP + Kadane algo
