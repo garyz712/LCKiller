@@ -333,3 +333,14 @@ class Solution:
 
         return "".join(stack)
         
+#monotonically decreasing stack with index: whenever pop, it mean a day is sucessfully processed -> a hotter day is found
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        res = [0] * len(temperatures) #intialize the res with 0s
+        stack = []
+        for i, t in enumerate(temperatures):
+            while stack and t>stack[-1][1]: #pop and update the res when current temperature is greater than the last unprocessed day (didn't find a hotter day before) because a hotter day than some previous days is found 
+                idx, temp = stack.pop() #remove from the stack mean a hotter day is found this idx day
+                res[idx] = i-idx
+            stack.append([i, t])
+        return res
