@@ -14,6 +14,7 @@ def dfsr(visited, graph, node):  # easier
         print (node)
         visited.add(node)
         for neighbour in graph[node]:
+            # could also use: if neighbour not in visited:
             dfsr(visited, graph, neighbour)
 
 
