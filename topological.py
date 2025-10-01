@@ -344,3 +344,31 @@ class Solution:
         #print(total)
         return res if total==n else -1
 
+
+
+
+# Reverse the graph:
+# Original edges: u → v
+# Reverse edges: v → u
+# Why? Terminal nodes (original nodes with out-degree 0) become starting points in BFS.
+class Solution:
+    def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
+        res = []
+        reverse_graph = defaultdict(list)
+        inorder = [0] *len(graph) #inorder for the reversed graph, outorder of the original graph
+        for i in range(len(graph)):
+            for n in graph[i]:
+                reverse_graph[n].append(i)
+                inorder[i] +=1 #inorder for the reversed graph: use i instead of n
+
+        queue = collections.deque([i for i in range(len(inorder)) if inorder[i]==0])
+        while queue:
+            node = queue.popleft()
+            res.append(node)
+            #print(res)
+            for nei in reverse_graph[node]:
+                inorder[nei] -=1
+                if inorder[nei] == 0:
+                    queue.append(nei)
+        #res.sort()
+        return sorted(res)
