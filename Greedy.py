@@ -86,3 +86,23 @@ class Solution:
                 res[j] = res[j+1] + 1
 
         return sum(res)
+
+
+# O(2N) greedy + hashmap
+class Solution:
+    def partitionLabels(self, s: str) -> List[int]:
+        lastIdx = {} #hashmap to store the idx of the last occurance of this char
+        for i, c in enumerate(s):
+            lastIdx[c] = i
+        
+        curEnd, size = 0, 0 #greedy processing
+        res=[]
+        for i, c in enumerate(s):
+            size+=1
+            if lastIdx[c]>curEnd:
+                curEnd = lastIdx[c]
+
+            if i==curEnd:
+                res.append(size)
+                size = 0
+        return res
