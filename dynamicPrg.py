@@ -30,7 +30,7 @@ def rob(nums):
         prev2 = curr
 
     return prev2
-    
+
 #multi var DP + Kadane algo
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
@@ -79,6 +79,17 @@ def coinChange(coins, amount):
 
     return dp[amount] if dp[amount] != float('inf') else -1
 
+# 1D DP: time O(N*sqrt(N)), space O(N), two loops to search for every single possible sqaure number
+class Solution:
+    def numSquares(self, n: int) -> int:
+        dp = [i for i in range(n+1)]
+
+        for i in range(1, len(dp)):
+            j=1
+            while j**2<=i:
+                dp[i] = min(dp[i], 1+dp[i-j**2])
+                j+=1
+        return dp[-1]
 
 # Bottom up 2D->1D DP: triangle problem
 class Solution:
