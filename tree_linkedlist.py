@@ -585,3 +585,49 @@ class Solution:
             return max(left, right) +1 #return its own height
         dfs(root)
         return res
+
+
+# Reverse Linkedlist + Slow fast pointers
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        if head is None:
+            return True
+
+        # Find the end of first half and reverse second half.
+        second_half_start = self.second_half_start(head)
+        second_half_start = self.reverse_list(second_half_start)
+
+        # Check whether or not there's a palindrome.
+        result = True
+        first_position = head
+        second_position = second_half_start
+        while result and second_position is not None:
+            if first_position.val != second_position.val:
+                result = False
+            first_position = first_position.next
+            second_position = second_position.next
+
+        return result
+
+    def second_half_start(self, head: ListNode) -> ListNode:
+        slow, fast = head, head
+
+        while fast and fast.next: # the slow pointer must be at the start of the second half: fast can be None
+        # while fast.next and fast.next.next: # this is for getting the slow pointer at the end of the first half: fast cannot be None
+            slow = slow.next
+            fast = fast.next.next
+        return slow
+
+    def reverse_list(self, head: ListNode) -> ListNode:
+        previous = None
+        current = head
+        while current:
+            temp = current.next
+            current.next = previous
+            previous = current
+            current = temp
+        return previous
