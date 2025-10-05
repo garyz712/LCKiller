@@ -631,3 +631,28 @@ class Solution:
             previous = current
             current = temp
         return previous
+
+
+
+# 3 pointers for cycle
+
+# slow: x1+x2
+# fast: x1+x2+x3+x2
+# 2*slow =fast ->  x1=x3
+# use pos pointer to meet slow pointer
+class Solution:
+    def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        slow, fast, pos = head, head, head
+        start = False
+        while slow != fast or start == False:
+            start = True
+            if fast == None or fast.next == None:
+                return None
+            slow = slow.next
+            fast = fast.next.next
+            
+        while pos != slow:
+            slow = slow.next
+            pos = pos.next
+
+        return pos
