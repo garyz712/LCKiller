@@ -348,3 +348,43 @@ class Solution:
                 ans.append(nums[queue[0]]) #adding the answer (the left most num in queue)
             #print(queue)
         return ans
+
+
+# Two pointers two traversals
+class Solution:
+    def getIntersectionNodeExp(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+        lA, lB = 0, 0
+        curA, curB = headA, headB
+
+        while curA:
+            lA+=1
+            curA = curA.next
+        while curB:
+            lB+=1
+            curB = curB.next
+
+        Alead = lA - lB
+        curA, curB = headA, headB
+        if Alead >=0:
+            for i in range(Alead):
+                curA = curA.next
+        else:
+            for i in range(-Alead):
+                curB = curB.next
+
+        while curA != curB:
+            curA = curA.next
+            curB = curB.next
+        return curA
+
+# pA pA pA pA->pB pB  pB pB pB pB 
+# pB pB pB pB  pB pB->pA pA pA pA
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> ListNode:
+        pA = headA
+        pB = headB
+
+        while pA != pB:
+            pA = headB if pA is None else pA.next
+            pB = headA if pB is None else pB.next
+
+        return pA
