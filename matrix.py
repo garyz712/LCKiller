@@ -1,3 +1,23 @@
+# matrix transpose + hashmap
+# zip(*grid) is the transpose = [list(col) for col in zip(*grid)]
+# # equivalent to:
+# zip([3,2,1], [1,7,6], [2,7,7])
+# OR
+# import numpy as np
+# grid_np = np.array(grid)
+# transpose = grid_np.T.tolist()
+
+class Solution:
+    def equalPairs(self, grid: List[List[int]]) -> int:
+        from collections import Counter
+        rows = Counter(tuple(row) for row in grid)
+        cols = Counter(tuple(col) for col in zip(*grid))
+        res = 0
+        for k in rows:
+            res += rows[k] * cols.get(k, 0)
+        return res
+        
+
 # in place matrix modification
 class Solution:
     def setZeroes(self, matrix: List[List[int]]) -> None:

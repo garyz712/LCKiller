@@ -1,3 +1,20 @@
+class Solution:
+    def findDifference(self, nums1: List[int], nums2: List[int]) -> List[List[int]]:
+        set1, set2 = set(nums1), set(nums2)
+        #intersection = set1 & set2
+        return [list(set1 - set2), list(set2 - set1)]
+
+# sorting frequency hashmap 
+class Solution:
+    def closeStrings(self, word1: str, word2: str) -> bool:
+        # Step 1: check if both have same unique letters
+        if set(word1) != set(word2):
+            return False
+        
+        # Step 2: check if sorted counts match
+        # swapping two values does not change frequency, but it guarantees to put the to-be-swapped groups to the correct positions
+        return sorted(Counter(word1).values()) == sorted(Counter(word2).values())
+
 class TrieNode:
     def __init__(self):
         self.children = {}  # Mapping from character to TrieNode
