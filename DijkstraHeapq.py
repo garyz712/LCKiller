@@ -234,3 +234,33 @@ class Solution:
             elif len(minheap) == k:#if heap reach k, update result
                 res = max(res, n2*(n1Sum))
         return res
+
+#hashset + heap
+class SmallestInfiniteSet:
+    def __init__(self):
+        self.s = [] # min-heap for numbers added back and smaller than current smallest (cause discontinuity)
+        self.set = set(self.s)
+        # heapq.heapify(self.s)
+        self.cur=1 # the next smallest number not popped yet
+
+    def popSmallest(self) -> int:
+        if self.set:
+            num = heapq.heappop(self.s)
+            self.set.remove(num)
+            return num
+        else:
+            val = self.cur
+            self.cur+=1
+            return val
+   
+    def addBack(self, num: int) -> None:
+        if num< self.cur and num not in self.set:
+            self.set.add(num)
+            heapq.heappush(self.s, num)
+        
+
+
+# Your SmallestInfiniteSet object will be instantiated and called as such:
+# obj = SmallestInfiniteSet()
+# param_1 = obj.popSmallest()
+# obj.addBack(num)
