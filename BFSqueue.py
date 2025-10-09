@@ -186,3 +186,36 @@ class Solution:
         return [bfs(q[0], q[1]) for q in queries]
 
 
+
+
+
+# iterate FIFO queue processing with 4 counters or two queue
+class Solution:
+    def predictPartyVictory(self, senate: str) -> str:
+        queue = deque(senate)
+        # for c in senate:
+        #     queue.append(c)
+        Daccum = 0
+        Raccum = 0
+        # Keep counts of active senators to check termination efficiently
+        Dcount = senate.count("D")
+        Rcount = senate.count("R")
+
+        while Dcount > 0 and Rcount > 0:
+            firstParty = queue.popleft()
+            if firstParty == "D":
+
+                if Raccum==0:
+                    queue.append(firstParty)
+                    Daccum += 1
+                else:
+                    Raccum-=1
+                    Dcount-=1
+            else:
+                if Daccum==0:
+                    queue.append(firstParty)
+                    Raccum += 1 
+                else:
+                    Daccum -= 1
+                    Rcount -= 1
+        return "Radiant" if queue[0] == "R" else "Dire"
