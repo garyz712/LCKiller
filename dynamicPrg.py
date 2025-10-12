@@ -31,6 +31,24 @@ def rob(nums):
 
     return prev2
 
+# Dynamic programming (DP) isn’t defined by “using a hash map or array.”
+# It’s defined by breaking a problem into overlapping subproblems and combining their optimal solutions.
+# DP + DFS + Tree
+
+class Solution:
+    def rob(self, root: Optional[TreeNode]) -> int:
+        def dfs(node):
+            if node == None:
+                return (0,0) # rob, not rob
+            robleft, notrobleft = dfs(node.left)
+            robright, notrobright = dfs(node.right)
+
+            rob = node.val + notrobleft + notrobright
+            notrob = max(robleft, notrobleft) + max(robright, notrobright)
+            return (rob, notrob)
+        return max(dfs(root))
+
+        
 #multi var DP + Kadane algo
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
