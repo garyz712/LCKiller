@@ -71,7 +71,54 @@ class Solution:
     #             backtrack(i, path, total + nums[i])
     #             path.pop()  # 🧠 undo
 
+class Solution:
+    def combinationSum3DFS(self, k: int, n: int) -> List[List[int]]:
+        res = [] #no need to use nonlocal because it is a list
+        def dfs(k, n, path, start):
+            if k==0 and n==0:
+                res.append(path)
+                return
+            for i in range(start, 10):
+                if i <= n:
+                    dfs(k-1, n-i, path+[i], i+1)
+        dfs(k, n, [], 1)
+        
+        return res
 
+    def combinationSum3(self, k: int, n: int) -> List[List[int]]:
+        res = [] #no need to use nonlocal because it is a list
+        path = []
+        def backtrack(k, n, start): #use start to avoid iterating the same comb
+            if k==0 and n==0:
+                res.append(path[:]) #append a copy for backtrack because it is modifying the same path
+                return
+            for i in range(start, 10):
+                if i <= n:
+                    path.append(i)
+                    backtrack(k-1, n-i, i+1)
+                    path.pop()
+        backtrack(k, n, 1)
+        
+        return res
+
+
+    def combinationSum3BF(self, k: int, n: int) -> List[List[int]]:
+        unused = set([i for i in range(1,10)])
+        res = [] #no need to use nonlocal because it is a list
+        def backtrack(k, n, path):
+            if k==0 and n==0:
+                if set(path) not in res:
+                    res.append(set(path))
+                    return
+            for i in unused:
+                if i <= n:
+                    unused.remove(i)
+                    backtrack(k-1, n-i, path+[i])
+                    unused.add(i)
+        backtrack(k, n, [])
+        
+        return [list(s) for s in res]
+        
 # DFS with space vs backtracking solution
 # Definition for a binary tree node.
 # class TreeNode:
