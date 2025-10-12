@@ -28,7 +28,28 @@ def dfs(visited, graph, node): #avoid recursion-related stack overflow
             if i not in visited:
                 visited.add(i)
                 stack.append(i)
-            
+
+# detect number of connected graph using dfs (very classic)
+class Solution:
+    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+        visited = set()
+        total = 0
+        def dfs(node):
+            nonlocal total
+            if node not in visited:
+                visited.add(node)
+                for i in range(len(isConnected[node])):
+                    if isConnected[node][i] == 1 and i!=node:
+                        dfs(i)
+
+
+        for i in range(len(isConnected)):
+            if i not in visited:
+                total+=1 #group+1 if find a new start node after doing dfs once
+                dfs(i)
+        return total
+
+
   #DFS with stack + In order traversal without recursion
 class BSTIterator:
 
@@ -174,6 +195,55 @@ class Solution:
                 queue.append((r, c-1))
 
         return image
+
+#in place flood fill modification  without visited set + DFS only from border 
+class Solution:
+    
+    def numEnclaves(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+        
+        def dfs(r, c):
+            if r < 0 or r >= m or c < 0 or c >= n or grid[r][c] == 0:
+                return
+            grid[r][c] = 0  # mark as water (visited)
+            for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]:
+                dfs(r + dr, c + dc)
+        
+        # Step 1: remove all lands connected to border
+        for i in range(m):
+            for j in range(n):
+                if (i == 0 or j == 0 or i == m-1 or j == n-1) and grid[i][j] == 1:
+                    dfs(i, j)
+        
+        # Step 2: count remaining land cells (enclaves)
+        return sum(grid[i][j] for i in range(m) for j in range(n))
+
+    def numEnclavesBruteForce(self, grid: List[List[int]]) -> int:
+        visited = set()
+        total = 0
+        def dfs(row, col):
+            nonlocal walkoff, cells
+            if (row,col) not in visited:
+                visited.add((row,col))
+                cells+=1
+                if row == 0 or row == len(grid)-1 or col==0 or col==len(grid[0])-1:
+                    walkoff = True
+                for i,j in [[-1,0], [0,-1],[0,1],[1,0]]:
+                    if 0<=row+i <=len(grid)-1 and 0<=col+j<=len(grid[0])-1:
+                        if grid[row+i][col+j] ==1:
+                            dfs(row+i, col+j)
+
+        
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if (i,j) not in visited and grid[i][j] == 1:
+                    walkoff = False
+                    cells = 0
+                    dfs(i,j)
+                    if walkoff==False:
+                        #print(cells)
+                        total += cells
+        return total
 
 
 #use dfs and set as hash, put tuple(list) and tuple in set
@@ -345,3 +415,23 @@ class Solution:
                 res[idx] = i-idx
             stack.append([i, t])
         return res
+
+
+#monotonic decreasing stack using answers (each value is used only twice)
+class StockSpanner:
+
+    def __init__(self):
+        self.stack = []
+        
+
+    def next(self, price: int) -> int:
+        ans = 1
+        while self.stack and self.stack[-1][0] <= price:
+            ans += self.stack.pop()[1] #pop all previous values smaller that the current price to keep the stack decreasing
+        self.stack.append([price, ans])
+        return ans
+
+
+# Your StockSpanner object will be instantiated and called as such:
+# obj = StockSpanner()
+# param_1 = obj.next(price)

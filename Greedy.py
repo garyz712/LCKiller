@@ -106,3 +106,30 @@ class Solution:
                 res.append(size)
                 size = 0
         return res
+
+# greedy sort by end time to leave the maximum (earliest start) time for future intervals
+class Solution:
+    def eraseOverlapIntervalsEnd(self, intervals: List[List[int]]) -> int:
+        intervals.sort(key = lambda x: (x[1], x[0])) #sort by end time
+        #print(intervals)
+        prev = -float("inf")
+        res = 0
+        for i, j in intervals:
+            if i<prev:
+                res+=1
+            else:
+                prev = j
+        return res
+
+    def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
+        intervals.sort(key = lambda x: (x[0], x[1])) #sort by start time
+        #print(intervals)
+        prev = -float("inf")
+        res = 0
+        for i, j in intervals:
+            if i<prev:
+                res+=1
+                prev = min(prev, j)
+            else:
+                prev = j
+        return res

@@ -234,3 +234,67 @@ class Solution:
             elif len(minheap) == k:#if heap reach k, update result
                 res = max(res, n2*(n1Sum))
         return res
+
+#hashset + heap
+class SmallestInfiniteSet:
+    def __init__(self):
+        self.s = [] # min-heap for numbers added back and smaller than current smallest (cause discontinuity)
+        self.set = set(self.s)
+        # heapq.heapify(self.s)
+        self.cur=1 # the next smallest number not popped yet
+
+    def popSmallest(self) -> int:
+        if self.set:
+            num = heapq.heappop(self.s)
+            self.set.remove(num)
+            return num
+        else:
+            val = self.cur
+            self.cur+=1
+            return val
+   
+    def addBack(self, num: int) -> None:
+        if num< self.cur and num not in self.set:
+            self.set.add(num)
+            heapq.heappush(self.s, num)
+        
+
+
+# Your SmallestInfiniteSet object will be instantiated and called as such:
+# obj = SmallestInfiniteSet()
+# param_1 = obj.popSmallest()
+# obj.addBack(num)
+
+
+# two heap + two pointers
+class Solution:
+    def totalCost(self, costs: List[int], k: int, candidates: int) -> int:
+        total= 0
+        heapLow = []
+        heapHigh = []
+        if 2*candidates <  len(costs):
+            for i in range(0, candidates):
+                heapq.heappush(heapLow, costs[i])
+                heapq.heappush(heapHigh, costs[len(costs)-i-1])
+            l, r = candidates, len(costs)-candidates-1
+        else:
+            for i in range(len(costs)):
+                heapq.heappush(heapLow, costs[i])
+            for i in range(k):
+                total += heapq.heappop(heapLow)
+            return total
+        
+        #print(heapLow, heapHigh, costs)
+        for i in range(k):
+            #print(heapLow, heapHigh, costs)
+            if heapHigh == [] or (heapLow and heapLow[0] <= heapHigh[0]):   #heap[0] is the smallest
+                total += heapq.heappop(heapLow)               
+                if l<=r:
+                    heapq.heappush(heapLow, costs[l])
+                    l+=1
+            else:
+                total += heapq.heappop(heapHigh)
+                if l<=r:
+                    heapq.heappush(heapHigh, costs[r])
+                    r-=1
+        return total
