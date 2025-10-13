@@ -320,7 +320,7 @@ class Solution:
 
         return res
 
-        
+
 # hash map for prefix sum
 class Solution:
     def subarraySum(self, nums: List[int], k: int) -> int:
@@ -336,3 +336,37 @@ class Solution:
             prefixSum[curSum] +=1
         #print(prefixSum)
         return res
+
+
+
+# hwo to use yield and yield from
+class Solution:
+    def leafSimilarDFS(self, root1: Optional[TreeNode], root2: Optional[TreeNode]) -> bool:
+        res = []
+        def dfs(root):
+            if root==None:
+                return 
+            elif root.left==root.right==None:
+                res.append(root.val)
+            else:
+                dfs(root.left)
+                dfs(root.right)
+        dfs(root1)
+        res1=res
+        res=[]
+        dfs(root2)
+        return res==res1
+        
+    def leafSimilar(self, root1, root2):
+        def dfs(node):
+            if node:
+                if not node.left and not node.right:
+                    yield node.val
+                # for val in dfs(node.left):
+                #     yield val
+                # for val in dfs(node.right):
+                #     yield val
+                yield from dfs(node.left)
+                yield from dfs(node.right)
+
+        return list(dfs(root1)) == list(dfs(root2))
