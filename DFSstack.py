@@ -435,3 +435,36 @@ class StockSpanner:
 # Your StockSpanner object will be instantiated and called as such:
 # obj = StockSpanner()
 # param_1 = obj.next(price)
+
+
+
+# bidirectional graph + DFS recursive visited check
+class Solution:
+    def minReorder(self, n: int, connections: List[List[int]]) -> int:
+        graph = {i: [] for i in range(n)}
+        
+        # Build bidirectional graph, mark edge direction
+        for a, b in connections:
+            graph[a].append([a,b])  
+            graph[b].append([a,b])
+
+        visited = set()
+
+        def dfs(node):
+            # this is incorrect because count += 1 may be already executed
+            # if node in visited:
+            #     return 0
+            # else:
+            visited.add(node)
+            count=0
+            for i, j in graph[node]:                  
+                if i==node:
+                    if j not in visited: #must be added because when visiting node 4, 4->0 will be double counted in count += 1
+                        count += 1
+                        count += dfs(j)
+                else:
+                    if i not in visited:
+                        count += dfs(i)
+            return count
+
+        return dfs(0)  
