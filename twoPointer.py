@@ -59,8 +59,26 @@ class Solution:
                 ans = area
         return ans
 
+#two pointer (different directions) for swap
+class Solution:
+    def reverseVowels(self, s: str) -> str:
+        vowels = set('aeiouAEIOU')
+        s = list(s)
+        i, j = 0, len(s) - 1
 
-#Inverse thinking : two pointer for swap
+        while i < j:
+            if s[i] not in vowels:
+                i += 1
+            elif s[j] not in vowels:
+                j -= 1
+            else:
+                s[i], s[j] = s[j], s[i]
+                i += 1
+                j -= 1
+
+        return ''.join(s)
+
+#Inverse thinking : two pointer (same directions) for swap 
 class Solution:
 
     def moveZeroes(self, nums: List[int]) -> None:
