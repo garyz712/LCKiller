@@ -199,3 +199,65 @@ class Solution: # O(n^3) -> O(n^2) 2D DP + MULTIPLE->TWO options at each step (b
         #[0,0,0]
         #[0,2,2]
         #[0,2,2]
+
+# 2 1D DP array or 0D
+class Solution:
+    def maxProfit21D(self, prices: List[int], fee: int) -> int:
+        hold = [0] * (len(prices)+1)
+        hold[0] = -float("inf")
+        free = [0] * (len(prices)+1)
+
+        for i in range(1, len(prices)+1):
+            hold[i] = max(hold[i-1], free[i-1]-prices[i-1])
+            free[i] = max(hold[i-1]+prices[i-1]-fee, free[i-1])
+
+        return free[-1]
+
+    def maxProfit(self, prices: List[int], fee: int) -> int:
+        n = len(prices)
+        hold, free = -prices[0], 0
+        
+        for i in range(1, n): #not n+1
+            tmp = hold
+            hold = max(hold, free - prices[i])
+            free = max(free, tmp + prices[i] - fee)
+        
+        return free
+
+# 2 1D DP array or 1D or 0D
+class Solution:
+    def numTilings2(self, n: int) -> int:
+        #p[n] = number of ways to tile a 2×n board with one square missing (either upper or lower tile).
+        #dp[n] = number of ways to tile a 2 × n board completely.
+        MOD = 10**9 + 7
+
+        if n <= 2:
+            return n
+
+        # Base cases
+        dp = [0] * (n + 1)  # full tiling counts
+        p  = [0] * (n + 1)  # partial tiling counts (one square missing)
+
+        dp[1] = 1  # only one vertical domino fits
+        dp[2] = 2  # two verticals or two horizontals
+        p[2] = 1   # single column with one cell missing (top or bottom)
+
+        # Fill using the recurrences:
+        # dp[i] = dp[i-1] + dp[i-2] + 2*p[i-1]
+        # p[i]  = p[i-1] + dp[i-2]
+        for i in range(3, n + 1):
+            dp[i] = (dp[i-1] + dp[i-2] + 2 * p[i-1]) % MOD
+            p[i] = (p[i-1] + dp[i-2]) % MOD
+            
+
+        return dp[n] % MOD
+
+    def numTilings(self, n: int) -> int:
+        MOD = 10**9 + 7
+        if n <= 2: return n
+        dp = [0]*(n+1)
+        dp[0], dp[1], dp[2] = 1, 1, 2
+        for i in range(3, n+1):
+            dp[i] = (2*dp[i-1] + dp[i-3]) % MOD
+        return dp[n]
+
