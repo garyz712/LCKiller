@@ -13,15 +13,15 @@ graph = {
 }
 
 def bfs(graph, node):
-  visited = set([node]) # List to keep track of visited nodes.
+  toBeVisited = set([node]) # List to keep track of visited nodes.
   queue = deque([node])     #Initialize a queue
   while queue:
     node = queue.popleft()
     print("visiting", node) #officially processing a node
     for i in graph[node]:
-      if i not in visited:
+      if i not in toBeVisited:
         queue.append(i)
-        visited.add(i) # add it to the To Do List, but check that it is seen so that it will not be added to queue again
+        toBeVisited.add(i) # add it to the To Do List, but check that it is seen so that it will not be added to queue again
 
         
 if __name__ == "__main__":
@@ -219,3 +219,29 @@ class Solution:
                     Daccum -= 1
                     Rcount -= 1
         return "Radiant" if queue[0] == "R" else "Dire"
+
+
+
+# when to add node to toBeVisited list make a difference!
+class Solution:
+    def nearestExit(self, maze: List[List[str]], entrance: List[int]) -> int:
+        queue = collections.deque([tuple(entrance)])
+        count = 0
+        foundexit = False
+        while queue:
+            n = len(queue)
+            for i in range(n):
+                cell = queue.popleft()
+                # don't mark it as visited here!
+                #and  → higher precedence than →  or So A or B and C is evaluated as A or (B and C)
+                if (cell[0] == 0 or cell[0] == len(maze)-1 or cell[1] == 0 or cell[1] == len(maze[0])-1) and cell!=tuple(entrance):
+                    foundexit = True
+                    return count
+
+                for i, j in [[1,0],[0,1],[-1,0],[0,-1]]:
+                    if 0<=cell[0]+i<=len(maze)-1 and 0<=cell[1]+j<=len(maze[0])-1 and  maze[cell[0]+i][cell[1]+j]==".":
+                        maze[cell[0]+i][cell[1]+j] = "+" #must add it to (TO BE) visited set here to save time from double adding instead of where actually visiting the cell
+                        queue.append((cell[0]+i, cell[1]+j))
+
+            count+=1
+        return count if foundexit else -1
