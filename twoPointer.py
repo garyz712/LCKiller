@@ -200,7 +200,21 @@ class Solution:
     
         return ans if foundOne else "" #if no eligible substring, return empty
 
-
+#counter / dictionary + for + while loop: classic sliding window using a zeros count to move left pointer
+class Solution:
+    def longestSubarray(self, nums: List[int]) -> int:
+        left, right = 0, 0
+        res, count = 0,0 
+        for right in range(len(nums)):
+            if nums[right]==0:
+                count+=1
+            while count>1:
+                if nums[left] == 0:
+                    count-=1
+                left+=1
+            res = max(res, right-left)
+        return res
+        
 class Solution:
     
     # two pointer, no swap
