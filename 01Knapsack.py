@@ -103,3 +103,14 @@ class Solution:
             for j in range(target, i - 1, -1):
                 dp[j] = dp[j] | dp[j-i] #either reaching the target without current i element or reaching the target after adding current i
         return dp[-1]
+
+
+# 0/1 knapsack without need to loop backward because any item can be used infinite times and thus can be double counted
+class Solution:
+    def change(self, amount: int, coins: List[int]) -> int:
+        dp = [0] * (amount+1) # number of way to reach this amount by using coins upto i (don't have to use i)
+        dp[0] = 1
+        for i in coins:
+            for n in range(i, len(dp)):          
+                dp[n]+=dp[n-i] #the new ways include all the original ways (without using i) and new number of ways after using i (dp[n-i])
+        return dp[-1]
