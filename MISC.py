@@ -322,7 +322,7 @@ class Solution:
 
         
 class Solution:
-    #cyclic sort
+    # O(n) + O(1) cyclic sort: use input array with idx as hash map
     def firstMissingPositive(self, nums: List[int]) -> int:
         n = len(nums)
 
