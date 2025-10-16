@@ -103,3 +103,45 @@ class Solution:
             for j in range(target, i - 1, -1):
                 dp[j] = dp[j] | dp[j-i] #either reaching the target without current i element or reaching the target after adding current i
         return dp[-1]
+
+# 0/1 Knapsack with random unordered update in row: 2D->1D 
+class Solution:
+    def maxSumDivThree(self, nums: List[int]) -> int:
+        n = len(nums)
+        dp = [float('-inf')] * 3
+        dp[0] = 0  # Base case: empty sum is 0
+        
+        for num in nums:
+            new_dp = dp[:]            
+            for r in range(3):
+                # Take current number, calculate the new remainder after adding r and update dp at the new remainder position
+                new_dp[(r + num) % 3] = max(new_dp[(r + num) % 3], dp[r] + num)
+            
+            dp = new_dp
+        
+        return dp[0] if dp[0] != float('-inf') else 0
+
+    def maxSumDivThree2(self, nums: List[int]) -> int:
+        n = len(nums)
+        
+        # dp[i][r] = maximum sum using first i elements with sum % 3 == r
+        dp = [[float('-inf')] * 3 for _ in range(n + 1)]
+        
+        # Base case: using 0 elements, sum = 0 (remainder 0)
+        dp[0][0] = 0
+        
+        for i in range(1, n + 1):         
+            for r in range(3):
+                # if nums[i-1]%3 == 0:
+                #     dp[i][r] = dp[i-1][r] + nums[i-1]
+                # else:
+
+                #(nums[i-1] % 3 + x) %3 = r -> x = (r - nums[i-1]) % 3  
+                complementary_remainder = (r - nums[i-1]) % 3 
+                
+                #if dp[i-1][prev_remainder] != float('-inf'):
+                # Option 1: Skip current element                  
+                # Option 2: Take current element
+                dp[i][r] = max(dp[i-1][r], dp[i-1][complementary_remainder] + nums[i-1])
+        
+        return dp[n][0] if dp[n][0] != float('-inf') else 0
