@@ -104,6 +104,32 @@ class Solution:
                 dp[j] = dp[j] | dp[j-i] #either reaching the target without current i element or reaching the target after adding current i
         return dp[-1]
 
+# Unbounded 0/1 knapsack without need to loop backward because any item can be used infinite times and thus can be double counted
+# 1D DP: Why two loops?
+# Because at each amount i, you have MULTIPLE ways to reach it, depending on coin denominations.
+
+def coinChange(coins, amount):
+    dp = [float('inf')] * (amount + 1) # other amounts cannot be made at this time.
+    dp[0] = 0  # 0 coins needed for amount 0, we know amount 0 can be made!
+
+    for i in range(1, amount + 1):
+        for coin in coins:
+            if i - coin >= 0:
+                dp[i] = min(dp[i], dp[i - coin] + 1) #minimum number of coins combination using different coins at this step
+
+    return dp[amount] if dp[amount] != float('inf') else -1
+
+
+# Unbounded 0/1 knapsack without need to loop backward because any item can be used infinite times and thus can be double counted
+class Solution:
+    def change(self, amount: int, coins: List[int]) -> int:
+        dp = [0] * (amount+1) # number of way to reach this amount by using coins upto i (don't have to use i)
+        dp[0] = 1
+        for i in coins:
+            for n in range(i, len(dp)):          
+                dp[n]+=dp[n-i] #the new ways include all the original ways (without using i) and new number of ways after using i (dp[n-i])
+        return dp[-1]
+
 # 0/1 Knapsack with random unordered update in row: 2D->1D 
 class Solution:
     def maxSumDivThree(self, nums: List[int]) -> int:
