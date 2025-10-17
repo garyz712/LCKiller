@@ -214,7 +214,7 @@ class Solution:
                 left+=1
             res = max(res, right-left)
         return res
-        
+
 class Solution:
     
     # two pointer, no swap
@@ -420,3 +420,18 @@ class Solution:
             pB = headA if pB is None else pB.next
 
         return pA
+
+
+#two pointer traversal from right + reverse sorting + create test case yourself
+# [4, 9, 3, 6, 5, 3, 1] -> [4, 9, 5, 1, 3, 3, 6] -> [4, 9, 5, 1, 3, 6, 3] -> [4, 9, 5, 1, 6, 3, 3] -> [4, 9, 5, 3, 1, 3, 6] 
+class Solution:
+    def nextPermutation(self, nums: List[int]) -> None:
+        i = len(nums) - 2
+        while i >= 0 and nums[i] >= nums[i+1]:
+            i -= 1 #find the first decreasing element from the right
+        if i >= 0:
+            j = len(nums) - 1
+            while nums[j] <= nums[i]: # find the first element greater than pivot from the right to keep the decreasing order after swapping
+                j -= 1
+            nums[i], nums[j] = nums[j], nums[i]  # swap
+        nums[i + 1:] = nums[i + 1:][::-1]  # reverse suffix only
