@@ -119,6 +119,44 @@ class Solution:
         
         return [list(s) for s in res]
         
+# three sets and four backtrack operation
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        cols=set()
+        posdiag= set()
+        negdiag = set()
+        res=[]
+        board = [["."]*n for i in range(n)]
+
+        def backtrack(row):
+            if row==n: #must happen because the answer must exist for any n
+                res.append(["".join(r) for r in board])
+                return
+            else:
+                for col in range(n):
+                    if col in cols or col+row in negdiag or col-row in posdiag:
+                        continue
+                    else:
+                        cols.add(col)
+                        posdiag.add(col-row)
+                        negdiag.add(col+row)
+                        board[row][col] = "Q"
+
+                        backtrack(row+1)
+
+                        cols.remove(col)
+                        posdiag.remove(col-row)
+                        negdiag.remove(col+row)
+                        board[row][col] = "."
+
+        backtrack(0)
+        return res
+
+
+
+        
+
+        
 # DFS with space vs backtracking solution
 # Definition for a binary tree node.
 # class TreeNode:
