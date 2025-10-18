@@ -436,7 +436,31 @@ class StockSpanner:
 # obj = StockSpanner()
 # param_1 = obj.next(price)
 
-
+# monotonically increasing stack + two loop + update the ans for each pop operation
+class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        stack = []
+        max_area = 0
+        
+        # First loop: Process bars while iterating through heights
+        for i in range(len(heights)):
+            while stack and heights[stack[-1]] >= heights[i]:
+                # Pop bar and calculate area
+                current_height = heights[stack.pop()]
+                # Width: from current index to the previous stack index (or 0 if stack empty)
+                current_width = i - (stack[-1] + 1 if stack else 0)
+                max_area = max(max_area, current_height * current_width)
+            stack.append(i)
+        
+        # Second loop: Process remaining increasing bars in stack
+        while stack:
+            # Pop bar and calculate area
+            current_height = heights[stack.pop()]
+            # Width: from end of array to the previous stack index (or 0 if stack empty)
+            current_width = len(heights) - (stack[-1] + 1 if stack else 0)
+            max_area = max(max_area, current_height * current_width)
+        
+        return max_area
 
 # bidirectional graph + DFS recursive visited check
 class Solution:
