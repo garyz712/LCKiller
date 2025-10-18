@@ -1,5 +1,5 @@
 
-
+# binary search in answer space
 
 def equalizeBandwidth(servers):
     target = max(servers) # target could be max(servers)+1 as well if changing the max is allowed
@@ -31,7 +31,7 @@ def check(hours, upgrade2, upgrade1):
     even_hours = hours // 2                # Number of even hours (for +2 upgrades)
     odd_hours = hours - even_hours         # Number of odd hours (for +1 upgrades)
     moreUpgrade2Needed = upgrade2 - even_hours    # Remaining "+2" upgrades after using even hours
-    if moreUpgrade2Needed < 0:             # If we have more even hours than needed
+    if moreUpgrade2Needed < 0:             # If we have more even hours than needed,
         moreUpgrade2Needed = 0             # don't use these even hours since that will exceed the target
     Upgrade1Needed = moreUpgrade2Needed * 2 + upgrade1  # If we don't have enough even hours, convert remaining "+2" upgrades to "+1" + original "+1" upgrades
     return Upgrade1Needed <= odd_hours     # Check if we have enough odd hours
