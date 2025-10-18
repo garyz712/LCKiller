@@ -10,8 +10,41 @@ class Solution: # we can simply find the most-used time slot and count the meeti
             else: #if new meeting start after the earliest ending time, we use the same room and also pop the ended meeting and replace it with the most recent meeting
                 heapq.heappop(heap)
                 heapq.heappush(heap,meeting[1])
-        return len(heap)
+        return len(heap) # this is the Maximum rooms EVER needed, because we did not pop all ended meetings, we pop at most once
 
+
+# Two pointers on two sorted arrays
+def minMeetingRooms_twoPointers(intervals):
+    """
+    Approach 3: Two Pointers (Separate Sorted Arrays)
+    Time: O(n log n), Space: O(n)
+    """
+    if not intervals:
+        return 0
+    
+    # Separate and sort start times and end times
+    starts = sorted([interval[0] for interval in intervals])
+    ends = sorted([interval[1] for interval in intervals])
+    
+    rooms_needed = 0
+    max_rooms = 0
+    start_ptr = 0
+    end_ptr = 0
+    
+    while start_ptr < len(starts):
+        if starts[start_ptr] < ends[end_ptr]:
+            # Meeting starts, need a room
+            rooms_needed += 1
+            max_rooms = max(max_rooms, rooms_needed)
+            start_ptr += 1
+        else:
+            # Meeting ends, free up a room
+            rooms_needed -= 1
+            end_ptr += 1
+    
+    return max_rooms
+
+    
 from collections import OrderedDict
 
 class LRUCache:
