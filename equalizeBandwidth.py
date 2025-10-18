@@ -1,3 +1,104 @@
+
+
+
+def equalizeBandwidth(servers):
+    target = max(servers) # target could be max(servers)+1 as well if changing the max is allowed
+    upgrade2 = 0                    # Count of "+2" upgrade units needed
+    upgrade1 = 0                    # Count of "+1" upgrade units needed
+    total = 0                    # Total upgrade units needed
+    
+    for bw in servers:
+        diff = target - bw            # Difference to reach max bandwidth
+        total += diff               # Add to total difference
+        upgrade2 += diff // 2          # Add count of "+2" upgrades needed
+        upgrade1 += diff % 2           # Add count of "+1" upgrades needed
+    
+    if total == 0:               # If all servers are already equal
+        return 0
+    
+    l, r = 0, 2 * total          # Binary search range
+    while l < r:
+        mid = (l + r) // 2
+        if check(mid, upgrade2, upgrade1):
+            r = mid
+        else:
+            l = mid + 1
+    
+    return l
+
+
+def check(hours, upgrade2, upgrade1):
+    even_hours = hours // 2                # Number of even hours (for +2 upgrades)
+    odd_hours = hours - even_hours         # Number of odd hours (for +1 upgrades)
+    moreUpgrade2Needed = upgrade2 - even_hours    # Remaining "+2" upgrades after using even hours
+    if moreUpgrade2Needed < 0:             # If we have more even hours than needed
+        moreUpgrade2Needed = 0             # don't use these even hours since that will exceed the target
+    Upgrade1Needed = moreUpgrade2Needed * 2 + upgrade1  # If we don't have enough even hours, convert remaining "+2" upgrades to "+1" + original "+1" upgrades
+    return Upgrade1Needed <= odd_hours     # Check if we have enough odd hours
+
+
+# binary search
+import math
+def equalizeBandwidth2(servers):
+    # Base case: if all servers have the same bandwidth
+    if len(set(servers)) == 1:
+        return 0
+    
+    max_bw = max(servers)
+    total_diff = sum(max_bw - bw for bw in servers)
+
+    # If we only use +1 upgrades on odd hours
+    right = total_diff * 2
+    # Binary search for the minimum hours needed
+    left = 0
+
+    
+    while left < right:
+        mid = (left + right) // 2
+        if is_possible(servers, mid):
+            right = mid
+        else:
+            left = mid + 1
+    
+    return left
+
+def is_possible(servers, hours):
+    # Calculate how many upgrades of each type we have
+    light_upgrades = (hours + 1) // 2  # Odd hours (+1 Mbps)
+    heavy_upgrades = hours // 2        # Even hours (+2 Mbps)
+    
+    # Calculate the maximum bandwidth we can reach
+    target = max(servers)
+    
+    # Calculate how much each server needs to increase
+    # to match the target bandwidth
+    differences = [target - server for server in servers]
+    
+    # Sort differences in descending order (greedy approach)
+    differences.sort(reverse=True)
+    
+    # Try to satisfy each server's needs
+    for diff in differences:
+        if diff == 0:
+            continue  # Skip servers already at target
+        
+        # Use heavy upgrades first (more efficient)
+        h_used = min(diff // 2, heavy_upgrades)
+        diff -= h_used * 2
+        heavy_upgrades -= h_used
+        
+        # Use light upgrades for remainder
+        l_used = min(diff, light_upgrades)
+        diff -= l_used
+        light_upgrades -= l_used
+        
+        # If we couldn't fully upgrade this server, return False
+        if diff > 0:
+            return False
+    
+    return True
+
+
 import heapq
 from collections import Counter
 def equalizeBandwidth1(servers):
@@ -61,98 +162,6 @@ def equalizeBandwidth1(servers):
         print(gaps)
     
     return hour
-
-import math
-def equalizeBandwidth2(servers):
-    # Base case: if all servers have the same bandwidth
-    if len(set(servers)) == 1:
-        return 0
-    
-    max_bw = max(servers)
-    total_diff = sum(max_bw - bw for bw in servers)
-
-    # If we only use +1 upgrades on odd hours
-    right = total_diff * 2
-    # Binary search for the minimum hours needed
-    left = 0
-
-    
-    while left < right:
-        mid = (left + right) // 2
-        if is_possible(servers, mid):
-            right = mid
-        else:
-            left = mid + 1
-    
-    return left
-
-def check(T, S2, S1):
-    E = T // 2 
-    O = T - E
-    te = S2 - E
-    if te < 0:
-        te = 0
-    need = te * 2 + S1
-    return need <= O
-
-def equalizeBandwidth(servers):
-    M = max(servers)
-    S2 = 0
-    S1 = 0
-    tt = 0
-    for bw in servers:
-        d = M - bw
-        tt += d
-        S2 += d // 2
-        S1 += d % 2
-    if tt == 0:
-        return 0
-    l, r = 0, 2 * tt
-    while l < r:
-        mid = (l + r) // 2
-        if check(mid, S2, S1):
-            r = mid
-        else:
-            l = mid + 1
-    return l
-
-def is_possible(servers, hours):
-    # Calculate how many upgrades of each type we have
-    light_upgrades = (hours + 1) // 2  # Odd hours (+1 Mbps)
-    heavy_upgrades = hours // 2        # Even hours (+2 Mbps)
-    
-    # Calculate the maximum bandwidth we can reach
-    target = max(servers)
-    
-    # Calculate how much each server needs to increase
-    # to match the target bandwidth
-    differences = [target - server for server in servers]
-    
-    # Sort differences in descending order (greedy approach)
-    differences.sort(reverse=True)
-    
-    # Try to satisfy each server's needs
-    for diff in differences:
-        if diff == 0:
-            continue  # Skip servers already at target
-        
-        # Use heavy upgrades first (more efficient)
-        h_used = min(diff // 2, heavy_upgrades)
-        diff -= h_used * 2
-        heavy_upgrades -= h_used
-        
-        # Use light upgrades for remainder
-        l_used = min(diff, light_upgrades)
-        diff -= l_used
-        light_upgrades -= l_used
-        
-        # If we couldn't fully upgrade this server, return False
-        if diff > 0:
-            return False
-    
-    return True
-
-
 
 
 def getPlaylistCount(videoLengths, n, k, threshold):
