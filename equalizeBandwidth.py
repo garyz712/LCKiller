@@ -273,23 +273,151 @@ def test_getPlaylistCount():
 
     print("All test cases passed!")
 
-# Run the tests
-test_getPlaylistCount()
+# # Run the tests
+# test_getPlaylistCount()
 
-# Test the case
-servers = [2, 2, 2, 3]
-print(equalizeBandwidth(servers))  # Should output 5
+# # Test the case
+# servers = [2, 2, 2, 3]
+# print(equalizeBandwidth(servers))  # Should output 5
 
-# Test cases
-print(equalizeBandwidth([1, 2, 4]))  # Output: 4
-print(equalizeBandwidth([2, 2, 2 , 3]))  # Output: 5
-print(equalizeBandwidth([1, 2 , 3]))  # Output: 2
-print(equalizeBandwidth([2, 3]))     # Output: 1
-print(equalizeBandwidth([2, 4]))     # Output: 2
-print(equalizeBandwidth([2, 7]))     # Output: 4 [3,7] -[5,7]- / - [7,7]
-print(equalizeBandwidth([1, 2, 6]))  # Output: 6
-#[2,2,6] - [4,2,6] - [4,3,6] - [4,5,6] - [4,6,6]- [6, 6, 6]
-print(equalizeBandwidth([1, 2, 7]))  # Output: 8
-#[2,2,7] [4,2,7] [4,3,7] [4,5,7] [5,5,7] [7,5,7] \ [7,7,7] 
-print(equalizeBandwidth([3, 5, 8, 10])) #10
-print(equalizeBandwidth([1, 1, 2, 2, 4, 5]))  # Output: 10
+# # Test cases
+# print(equalizeBandwidth([1, 2, 4]))  # Output: 4
+# print(equalizeBandwidth([2, 2, 2 , 3]))  # Output: 5
+# print(equalizeBandwidth([1, 2 , 3]))  # Output: 2
+# print(equalizeBandwidth([2, 3]))     # Output: 1
+# print(equalizeBandwidth([2, 4]))     # Output: 2
+# print(equalizeBandwidth([2, 7]))     # Output: 4 [3,7] -[5,7]- / - [7,7]
+# print(equalizeBandwidth([1, 2, 6]))  # Output: 6
+# #[2,2,6] - [4,2,6] - [4,3,6] - [4,5,6] - [4,6,6]- [6, 6, 6]
+# print(equalizeBandwidth([1, 2, 7]))  # Output: 8
+# #[2,2,7] [4,2,7] [4,3,7] [4,5,7] [5,5,7] [7,5,7] \ [7,7,7] 
+# print(equalizeBandwidth([3, 5, 8, 10])) #10
+# print(equalizeBandwidth([1, 1, 2, 2, 4, 5]))  # Output: 10
+
+
+def getMaximumTeamSize(startTime, endTime):
+    """
+    Find maximum team size where at least one member can interact with all others.
+    
+    Key insight: For a team to exist, there must be at least one "leader" employee
+    whose working hours overlap with all other team members.
+    
+    This is NOT Meeting Rooms II - it's finding max clique in interval overlap graph
+    where we need one node connected to all others (star topology).
+    """
+    n = len(startTime)
+    
+    # For each employee i, count how many other employees they can interact with
+    # Employee i is a potential "team leader"
+    max_team = 0
+    
+    for i in range(n):
+        # Count employees whose intervals overlap with employee i
+        team_size = 1  # Include employee i themselves
+        
+        for j in range(n):
+            if i != j:
+                # Check if employee i and j have overlapping work hours
+                # Intervals [a,b] and [c,d] overlap if and only if: a < d and c < b
+                if startTime[i] < endTime[j] and startTime[j] < endTime[i]:
+                    team_size += 1
+        
+        max_team = max(max_team, team_size)
+    
+    return max_team
+
+
+# Test with examples
+if __name__ == "__main__":
+    test_cases = [
+        # Test 1: Sample Case 0 from problem
+        {
+            "start": [1, 6, 4, 3, 1],
+            "end": [2, 7, 5, 8, 2],
+            "expected": 3,
+            "description": "Original sample case"
+        },
+        # Test 2: Sample Case 1 from problem
+        {
+            "start": [2, 5, 6, 8],
+            "end": [5, 6, 10, 9],
+            "expected": 2,
+            "description": "Original sample case 1"
+        },
+        # Test 3: Star topology - one long interval covering all short ones
+        {
+            "start": [1, 2, 6],
+            "end": [10, 5, 9],
+            "expected": 3,
+            "description": "Star: A overlaps B and C, but B and C don't overlap"
+        },
+        # Test 4: All intervals overlap (complete graph)
+        {
+            "start": [1, 2, 3],
+            "end": [10, 9, 8],
+            "expected": 3,
+            "description": "All intervals overlap with each other"
+        },
+        # Test 5: No overlaps at all
+        {
+            "start": [1, 5, 10, 15],
+            "end": [2, 6, 11, 16],
+            "expected": 1,
+            "description": "No overlapping intervals - max team is 1"
+        },
+        # Test 6: Sequential intervals (touching but not overlapping)
+        {
+            "start": [1, 3, 5, 7],
+            "end": [3, 5, 7, 9],
+            "expected": 1,
+            "description": "Adjacent intervals with no overlap"
+        },
+        # Test 7: One employee works entire day, others have shifts
+        {
+            "start": [0, 2, 6, 10, 14],
+            "end": [24, 4, 8, 12, 16],
+            "expected": 5,
+            "description": "One employee overlaps all others (24-hour shift)"
+        },
+        # Test 8: Two separate groups
+        {
+            "start": [1, 2, 3, 10, 11, 12],
+            "end": [5, 5, 5, 15, 15, 15],
+            "expected": 3,
+            "description": "Two separate groups of 3, no cross-overlap"
+        },
+        # Test 9: Chain of overlaps (A-B, B-C, C-D but not A-D)
+        {
+            "start": [1, 3, 5, 7],
+            "end": [4, 6, 8, 10],
+            "expected": 3,
+            "description": "Chain: each overlaps next, but no single leader for all"
+        },
+        # Test 10: Single employee
+        {
+            "start": [5],
+            "end": [10],
+            "expected": 1,
+            "description": "Single employee - team of 1"
+        },
+        # Test 11: Large star - one central overlapping many
+        {
+            "start": [5, 1, 3, 7, 9, 11],
+            "end": [15, 6, 8, 12, 14, 16],
+            "expected": 6,
+            "description": "Employee 0 [5,15] overlaps all 5 others"
+        },
+
+    ]
+    
+    print("=" * 70)
+    for i, test in enumerate(test_cases, 1):
+        result = getMaximumTeamSize(test["start"], test["end"])
+        status = "✓" if result == test["expected"] else "✗"
+        print(f"Test {i:2d} {status}: {test['description']}")
+        print(f"         Start: {test['start']}")
+        print(f"         End:   {test['end']}")
+        print(f"         Expected: {test['expected']}, Got: {result}")
+        if result != test["expected"]:
+            print(f"         ❌ FAILED!")
+        print()
