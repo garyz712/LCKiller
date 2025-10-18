@@ -436,7 +436,7 @@ class StockSpanner:
 # obj = StockSpanner()
 # param_1 = obj.next(price)
 
-# monotonically increasing stack + two loop (only consider backward direction for each height) + update the ans for each pop operation
+# monotonically increasing stack + two loop (only consider backward processing and forward look for each height) + update the ans for each pop operation
 class Solution:
     def largestRectangleArea(self, heights: List[int]) -> int:
         stack = []
