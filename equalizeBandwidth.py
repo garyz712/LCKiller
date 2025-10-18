@@ -295,7 +295,7 @@ def test_getPlaylistCount():
 # print(equalizeBandwidth([1, 1, 2, 2, 4, 5]))  # Output: 10
 
 
-def getMaximumTeamSize(startTime, endTime):
+def getMaximumTeamSizeBF(startTime, endTime):
     """
     Find maximum team size where at least one member can interact with all others.
     
@@ -325,6 +325,7 @@ def getMaximumTeamSize(startTime, endTime):
         max_team = max(max_team, team_size)
     
     return max_team
+
 
 
 # Test with examples
