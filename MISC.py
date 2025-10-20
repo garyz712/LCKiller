@@ -247,7 +247,15 @@ class Solution:
         while left < right: # keep turning off the rightmost "1" bit until right is smaller than left, at this point, right will be the common prefix for ALL numbers in the range!
             right &= (right - 1) # whenever you do this, you change the rightmost "1" bit to "0" bit in right
         return right # this is the common prefix for ALL numbers in the range, it is also the answer -> AND all numbers!
-        
+
+# DP: current ans = the DP answer from current number without the last 1 bit + 1
+class Solution:
+    def countBits(self, n: int) -> List[int]:
+        ans = [0] * (n + 1)
+        for x in range(1, n + 1):
+            ans[x] = ans[x & (x - 1)] + 1 # 
+        return ans 
+
 #trie prefix tree + dfs + backtracking
 class TrieNode:
     def __init__(self):
