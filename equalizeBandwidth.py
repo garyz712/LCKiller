@@ -295,7 +295,8 @@ def test_getPlaylistCount():
 # print(equalizeBandwidth([1, 1, 2, 2, 4, 5]))  # Output: 10
 
 
-def getMaximumTeamSizeBF(startTime, endTime):
+# hashmap + double sort
+def getMaximumTeamSize(startTime, endTime):
     """
     Find maximum team size where at least one member can interact with all others.
     
@@ -306,25 +307,26 @@ def getMaximumTeamSizeBF(startTime, endTime):
     where we need one node connected to all others (star topology).
     """
     n = len(startTime)
+    no_overlaps = [0]*n
+    starts = sorted(list(zip(startTime, range(n))))
+    ends = sorted(list(zip(endTime, range(n))))
+
+    #print(starts, ends)
+
+    pop_count = 0
+    for start, idx  in starts:
+        while ends[pop_count][0]<=start:
+            pop_count += 1
+        no_overlaps[idx] = pop_count
     
-    # For each employee i, count how many other employees they can interact with
-    # Employee i is a potential "team leader"
-    max_team = 0
+    pop_count = 0
+    for end, idx  in ends[::-1]:
+        while starts[n-pop_count-1][0]>=end:
+            pop_count += 1
+        no_overlaps[idx] += pop_count
     
-    for i in range(n):
-        # Count employees whose intervals overlap with employee i
-        team_size = 1  # Include employee i themselves
-        
-        for j in range(n):
-            if i != j:
-                # Check if employee i and j have overlapping work hours
-                # Intervals [a,b] and [c,d] overlap if and only if: a < d and c < b
-                if startTime[i] < endTime[j] and startTime[j] < endTime[i]:
-                    team_size += 1
-        
-        max_team = max(max_team, team_size)
+    return n-min(no_overlaps)
     
-    return max_team
 
 
 
