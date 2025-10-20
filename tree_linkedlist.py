@@ -656,3 +656,25 @@ class Solution:
             pos = pos.next
 
         return pos
+
+
+# Not a DP problem, just updating the ans during DFS traversal
+
+class Solution:
+    def longestZigZag(self, root: Optional[TreeNode]) -> int:
+        self.ans =0
+        def findlongest(root, currentDir, path):
+            if root:
+                self.ans = max(path, self.ans)
+
+                if currentDir == "left":
+                    findlongest(root.right, "right", path+1)
+                    findlongest(root.left, "left", 1)
+                else:
+                    findlongest(root.left, "left", path+1)
+                    findlongest(root.right, "right", 1)
+
+
+        findlongest(root, "DoesNotMatter", 0)
+
+        return self.ans
