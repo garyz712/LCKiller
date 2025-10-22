@@ -289,3 +289,18 @@ class Solution:
             dp[i] = (2*dp[i-1] + dp[i-3]) % MOD
         return dp[n]
 
+
+
+# iterative 1d dp
+class Solution:
+    def numberOfWays(self, numPeople: int) -> int:
+        m = 1000000007
+        dp = [0] * (numPeople // 2 + 1)
+        dp[0] = 1 # 0 pair of people
+        for i in range(1, numPeople // 2 + 1):
+            #pick a random pair, and split the circle into two: left (2j) and right (2i-2-2j = 2(i-1-j)), the number of ways for this pair is dp[j] * dp[i-j-1]
+            # there could be 2j (0<=j<numPeople // 2) people on the left
+            for j in range(i):
+                dp[i] += dp[j] * dp[i - j - 1]
+                dp[i] %= m
+        return dp[numPeople // 2]
