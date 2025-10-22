@@ -114,7 +114,16 @@ class Solution:
         
         return same + diff
         
-
+# O(n) -> O(1) dp to store the minimum cost to paint i house where j color is used for the last house
+class Solution:
+    def minCost(self, costs: List[List[int]]) -> int:
+        dp = costs[0]
+        if len(costs)>1:
+            for i in range(1,len(costs)):
+                dp1 = dp[:]
+                for j in range(3):
+                    dp[j] = costs[i][j] + min(dp1[(j+1)%3],dp1[(j+2)%3])
+        return min(dp)
 
 # 1D DP: time O(N*sqrt(N)), space O(N), two loops to search for every single possible sqaure number
 class Solution:
