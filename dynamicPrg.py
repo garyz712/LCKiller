@@ -293,6 +293,17 @@ class Solution:
 
 # iterative 1d dp
 class Solution:
+    def maxA(self, n: int) -> int:
+        if n<7:
+            return n
+        dp = [i+1 for i in range(n)]
+        for i in range(6, n):
+            for j in range(i-2): #if you want to use the result from previous dp, it must be at least i-3 or earlier result, if it is i-4, we could multiply dp[i-4] by 4-1=3
+                dp[i] = max(dp[j] * (i-j-1), dp[i])
+        return dp[-1]
+
+# iterative 1d dp
+class Solution:
     def numberOfWays(self, numPeople: int) -> int:
         m = 1000000007
         dp = [0] * (numPeople // 2 + 1)
