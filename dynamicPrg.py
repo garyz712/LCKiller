@@ -81,7 +81,38 @@ class Solution:
 
         return max(globMax, total-globMin) if globMax>0 else globMax #if all nums are negative, total-globMin will be 0>globMax -> wrong! -> globMax
 
+# O(n) -> O(1) DP
+class Solution:
+    # def numWays(self, n: int, k: int) -> int:
+    #     dp = [[1] * k for i in range(n)]
+    #     if n>1:
+    #         dp[1] = [k] * k # the number of ways where last fence color is j 
+    #         for i in range(2, n):
+    #             for j in range(k):
+    #                 dp[i][j] = sum([dp[i-1][a] for a in range(k) if a!=j])
+    #                 dp[i][j] += sum([dp[i-2][a] for a in range(k) if a!=j])
+    #     return sum(dp[-1]) 
 
+    def numWays(self, n: int, k: int) -> int:
+        if n == 0:
+            return 0
+        if n == 1:
+            return k
+        
+        # Initialize for n=2
+        same = k  # Ways where last two posts are same
+        diff = k * (k - 1)  # Ways where last two posts are different
+        
+        # Iterate from 3rd post to nth post
+        for i in range(3, n + 1):
+            # For same, previous must be diff, and we use same color (1 choice)
+            new_same = diff
+            # For diff, previous can be same or diff, and we use k-1 colors
+            new_diff = (same + diff) * (k - 1)
+            # Update for next iteration
+            same, diff = new_same, new_diff
+        
+        return same + diff
         
 
 
