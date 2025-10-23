@@ -133,3 +133,18 @@ class Solution:
             else:
                 prev = j
         return res
+
+# we don't need the first subsequence — just to know if such a pattern exists. each number is considered for three position and always fill in the lowest position in the triplet.
+
+class Solution:
+    def increasingTriplet(self, nums: List[int]) -> bool:
+        first_num = float("inf")
+        second_num = float("inf")
+        for n in nums:
+            if n <= first_num:
+                first_num = n
+            elif n <= second_num:
+                second_num = n
+            else:
+                return True
+        return False
