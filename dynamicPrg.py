@@ -81,9 +81,49 @@ class Solution:
 
         return max(globMax, total-globMin) if globMax>0 else globMax #if all nums are negative, total-globMin will be 0>globMax -> wrong! -> globMax
 
+# O(n) -> O(1) DP
+class Solution:
+    # def numWays(self, n: int, k: int) -> int:
+    #     dp = [[1] * k for i in range(n)]
+    #     if n>1:
+    #         dp[1] = [k] * k # the number of ways where last fence color is j 
+    #         for i in range(2, n):
+    #             for j in range(k):
+    #                 dp[i][j] = sum([dp[i-1][a] for a in range(k) if a!=j])
+    #                 dp[i][j] += sum([dp[i-2][a] for a in range(k) if a!=j])
+    #     return sum(dp[-1]) 
 
+    def numWays(self, n: int, k: int) -> int:
+        if n == 0:
+            return 0
+        if n == 1:
+            return k
         
-
+        # Initialize for n=2
+        same = k  # Ways where last two posts are same
+        diff = k * (k - 1)  # Ways where last two posts are different
+        
+        # Iterate from 3rd post to nth post
+        for i in range(3, n + 1):
+            # For same, previous must be diff, and we use same color (1 choice)
+            new_same = diff
+            # For diff, previous can be same or diff, and we use k-1 colors
+            new_diff = (same + diff) * (k - 1)
+            # Update for next iteration
+            same, diff = new_same, new_diff
+        
+        return same + diff
+        
+# O(n) -> O(1) dp to store the minimum cost to paint i house where j color is used for the last house
+class Solution:
+    def minCost(self, costs: List[List[int]]) -> int:
+        dp = costs[0]
+        if len(costs)>1:
+            for i in range(1,len(costs)):
+                dp1 = dp[:]
+                for j in range(3):
+                    dp[j] = costs[i][j] + min(dp1[(j+1)%3],dp1[(j+2)%3])
+        return min(dp)
 
 # 1D DP: time O(N*sqrt(N)), space O(N), two loops to search for every single possible sqaure number
 class Solution:
@@ -249,3 +289,29 @@ class Solution:
             dp[i] = (2*dp[i-1] + dp[i-3]) % MOD
         return dp[n]
 
+
+
+# iterative 1d dp
+class Solution:
+    def maxA(self, n: int) -> int:
+        if n<7:
+            return n
+        dp = [i+1 for i in range(n)]
+        for i in range(6, n):
+            for j in range(i-2): #if you want to use the result from previous dp, it must be at least i-3 or earlier result, if it is i-4, we could multiply dp[i-4] by 4-1=3
+                dp[i] = max(dp[j] * (i-j-1), dp[i])
+        return dp[-1]
+
+# iterative 1d dp
+class Solution:
+    def numberOfWays(self, numPeople: int) -> int:
+        m = 1000000007
+        dp = [0] * (numPeople // 2 + 1)
+        dp[0] = 1 # 0 pair of people
+        for i in range(1, numPeople // 2 + 1):
+            #pick a random pair, and split the circle into two: left (2j) and right (2i-2-2j = 2(i-1-j)), the number of ways for this pair is dp[j] * dp[i-j-1]
+            # there could be 2j (0<=j<numPeople // 2) people on the left
+            for j in range(i):
+                dp[i] += dp[j] * dp[i - j - 1]
+                dp[i] %= m
+        return dp[numPeople // 2]
