@@ -708,3 +708,32 @@ class Solution:
         findlongest(root, "DoesNotMatter", 0)
 
         return self.ans
+
+
+# BST recursion for search + borrow leaf node value then deletion
+class Solution:
+    def deleteNode(self, root: Optional[TreeNode], key: int) -> Optional[TreeNode]:
+        if not root:
+            return root
+        
+        if root.val > key:
+            root.left = self.deleteNode(root.left, key)
+        elif root.val < key:
+            root.right = self.deleteNode(root.right, key)
+        else: # find the key to be deleted
+            if not root.left: # will return None for leaf node
+                return root.right
+            elif not root.right:
+                return root.left
+            
+            # Case where there are two children
+
+            curr = root.right
+            while curr.left:
+                curr = curr.left # find the smallest number greater than root
+            root.val = curr.val # edit the root value using that value
+
+            root.right = self.deleteNode(root.right, curr.val) # update the right tree by deleting the used val in the root right tree 
+        return root
+                
+        
