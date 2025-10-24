@@ -436,3 +436,22 @@ class Solution:
             nums[i], nums[j] = nums[j], nums[i]  # swap
         nums[i + 1:] = nums[i + 1:][::-1]  # reverse suffix only
 
+
+# iterative agressive two pointers on sorted word list
+class Solution:
+    def suggestedProducts(self, products: List[str], searchWord: str) -> List[List[str]]:
+        res = []
+        products.sort()
+        left, right = 0, len(products)-1
+
+        for i in range(len(searchWord)):
+            while left <= right and (len(products[left]) <= i or searchWord[i]!=products[left][i]):
+                left+=1
+            while left <= right and (len(products[right]) <= i or searchWord[i]!=products[right][i]):
+                right-=1 
+            ithlist = []
+            # now you have all the candidates
+            for j in range(min(3, right-left + 1)):
+                ithlist.append(products[left+j])
+            res.append(ithlist)
+        return res
