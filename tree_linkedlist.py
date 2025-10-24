@@ -540,7 +540,37 @@ class Solution(object): # use two point to find if there is a cycle in linked li
             fast = fast.next.next
         return True
 
+# Three while loop + slow/fast pointer finding mid + two pointer reversing linkedlist
+class Solution:
+    def pairSum(self, head: Optional[ListNode]) -> int:
+        res = 0
+        slow, fast = head, head
+        while fast and fast.next: # find the start of next half
+            fast = fast.next.next
+            slow = slow.next 
 
+        # # Three pointers reverse second half of the linked list .
+        # curr = slow # start reversing
+        # prev = None # create a empty node for current node to connect to
+        # while curr: # while current node is not empty
+        #     prt = curr.next #create another pointer to STORE curr's next (not use yet), which will be the next curr
+        #     curr.next = prev # reconnect current's next
+        #     prev=curr #reset prev to cur
+        #     curr = prt #reset cur to its next
+        
+        # Two pointers reverse second half of the linked list.
+        curr, prev = slow, None
+        while curr:       
+            curr.next, prev, curr = prev, curr, curr.next
+
+        # prev is the new head after reversing
+        while prev:
+            res = max(res, prev.val+head.val)
+            prev = prev.next
+            head = head.next
+        return res
+        
+        
 # Three pointers for linkedlist reversing
 class Solution:
     def reverseListPrt(self, head: Optional[ListNode]) -> Optional[ListNode]:
