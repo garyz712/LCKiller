@@ -48,7 +48,43 @@ class Solution:
             return (rob, notrob)
         return max(dfs(root))
 
-        
+# pure Kadane algo
+def kadane(nums):
+    max_sum = nums[0]
+    current_sum = 0
+
+    for n in nums:
+        current_sum = max(n, current_sum + n)
+        max_sum = max(max_sum, current_sum)
+
+    return max_sum
+
+# Kadane algo with indexing
+def findRange(data):
+    if not data:
+        return []
+    cur_max = data[0] # the curent max sum including the current number, this cannot be 0 because subarray cannot be empty
+    glob_max = data[0]
+
+    start = 0 # no need for the end because i is always the current_end by definition
+    glob_start, glob_end = 0, 0
+
+    for i in range(1, len(data)):
+        if cur_max < 0: #if the previous sum is negative, definitely start a new interval
+            start = i # start accumulating again whenever a new interval is started 
+            cur_max = 0 #restart accumulating sum
+
+        #definitely add the current num to update the cur max sum
+        cur_max += data[i]
+
+        if cur_max > glob_max: # if a new max is finded, update the global sum and also the range
+            glob_max = cur_max
+            glob_start = start
+            glob_end = i
+
+    return [glob_start, glob_end] # can also return glob_max
+
+
 #multi var DP + Kadane algo
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
