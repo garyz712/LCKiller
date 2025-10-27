@@ -12,7 +12,7 @@ class Solution: # we can simply find the most-used time slot and count the meeti
                 heapq.heappush(heap,meeting[1])
         return len(heap) # this is the Maximum rooms EVER needed, because we did not pop all ended meetings, we pop at most once
 
-
+# 
 # Two pointers on two sorted arrays
 def minMeetingRooms_twoPointers(intervals):
     """
