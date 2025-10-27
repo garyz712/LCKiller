@@ -171,3 +171,77 @@ class Solution:
                 dp[i][r] = max(dp[i-1][r], dp[i-1][complementary_remainder] + nums[i-1])
         
         return dp[n][0] if dp[n][0] != float('-inf') else 0
+
+
+# --------------------------------- Kadane DP ------------------------------------------------------------
+
+
+
+# pure Kadane algo
+def kadane(nums):
+    max_sum = nums[0]
+    current_sum = 0
+
+    for n in nums:
+        current_sum = max(n, current_sum + n)
+        max_sum = max(max_sum, current_sum)
+
+    return max_sum
+
+# Kadane algo with indexing
+def findRange(data):
+    if not data:
+        return []
+    cur_max = data[0] # the curent max sum including the current number, this cannot be 0 because subarray cannot be empty
+    glob_max = data[0]
+
+    start = 0 # no need for the end because i is always the current_end by definition
+    glob_start, glob_end = 0, 0
+
+    for i in range(1, len(data)):
+        if cur_max < 0: #if the previous sum is negative, definitely start a new interval
+            start = i # start accumulating again whenever a new interval is started 
+            cur_max = 0 #restart accumulating sum
+
+        #definitely add the current num to update the cur max sum
+        cur_max += data[i]
+
+        if cur_max > glob_max: # if a new max is finded, update the global sum and also the range
+            glob_max = cur_max
+            glob_start = start
+            glob_end = i
+
+    return [glob_start, glob_end] # can also return glob_max
+
+
+#multi var DP + Kadane algo
+class Solution:
+    def maxProduct(self, nums: List[int]) -> int:
+        currMaxProd = 1
+        currMinProd = 1
+        globProd = -float("inf")
+        
+        for n in nums:
+            temp = max(max(currMaxProd*n, currMinProd*n), n)
+            currMinProd = min(min(currMaxProd*n, currMinProd*n), n) #need to save the current minimum because if they are negative and the current number is negative as well, they can also contribute to the maximum product. 
+            currMaxProd = temp
+            globProd = max(globProd, currMaxProd)
+        return globProd
+
+
+#multi var DP + Kadane algo
+class Solution:
+    def maxSubarraySumCircular(self, nums: List[int]) -> int:
+        globMax, globMin = nums[0], nums[0]
+        curMax, curMin = 0, 0
+
+        total = 0
+
+        for n in nums:
+            curMax = max(curMax+n, n) #the maximum sum including the current n
+            curMin = min(curMin+n, n) #the minimum sum including the current n
+            total+=n
+            globMax = max(globMax, curMax)
+            globMin = min(globMin, curMin)
+
+        return max(globMax, total-globMin) if globMax>0 else globMax #if all nums are negative, total-globMin will be 0>globMax -> wrong! -> globMax

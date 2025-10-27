@@ -48,75 +48,6 @@ class Solution:
             return (rob, notrob)
         return max(dfs(root))
 
-# pure Kadane algo
-def kadane(nums):
-    max_sum = nums[0]
-    current_sum = 0
-
-    for n in nums:
-        current_sum = max(n, current_sum + n)
-        max_sum = max(max_sum, current_sum)
-
-    return max_sum
-
-# Kadane algo with indexing
-def findRange(data):
-    if not data:
-        return []
-    cur_max = data[0] # the curent max sum including the current number, this cannot be 0 because subarray cannot be empty
-    glob_max = data[0]
-
-    start = 0 # no need for the end because i is always the current_end by definition
-    glob_start, glob_end = 0, 0
-
-    for i in range(1, len(data)):
-        if cur_max < 0: #if the previous sum is negative, definitely start a new interval
-            start = i # start accumulating again whenever a new interval is started 
-            cur_max = 0 #restart accumulating sum
-
-        #definitely add the current num to update the cur max sum
-        cur_max += data[i]
-
-        if cur_max > glob_max: # if a new max is finded, update the global sum and also the range
-            glob_max = cur_max
-            glob_start = start
-            glob_end = i
-
-    return [glob_start, glob_end] # can also return glob_max
-
-
-#multi var DP + Kadane algo
-class Solution:
-    def maxProduct(self, nums: List[int]) -> int:
-        currMaxProd = 1
-        currMinProd = 1
-        globProd = -float("inf")
-        
-        for n in nums:
-            temp = max(max(currMaxProd*n, currMinProd*n), n)
-            currMinProd = min(min(currMaxProd*n, currMinProd*n), n) #need to save the current minimum because if they are negative and the current number is negative as well, they can also contribute to the maximum product. 
-            currMaxProd = temp
-            globProd = max(globProd, currMaxProd)
-        return globProd
-
-
-#multi var DP + Kadane algo
-class Solution:
-    def maxSubarraySumCircular(self, nums: List[int]) -> int:
-        globMax, globMin = nums[0], nums[0]
-        curMax, curMin = 0, 0
-
-        total = 0
-
-        for n in nums:
-            curMax = max(curMax+n, n) #the maximum sum including the current n
-            curMin = min(curMin+n, n) #the minimum sum including the current n
-            total+=n
-            globMax = max(globMax, curMax)
-            globMin = min(globMin, curMin)
-
-        return max(globMax, total-globMin) if globMax>0 else globMax #if all nums are negative, total-globMin will be 0>globMax -> wrong! -> globMax
-
 # O(n) -> O(1) DP
 class Solution:
     # def numWays(self, n: int, k: int) -> int:
@@ -325,7 +256,21 @@ class Solution:
             dp[i] = (2*dp[i-1] + dp[i-3]) % MOD
         return dp[n]
 
+# skip index 1d dp + operation can happen on the next idx from the used dp idx (e.g buying at d-7+1 = d-6 day, but using dp[d-7] value)
 
+class Solution:
+    def mincostTickets(self, days: List[int], costs: List[int]) -> int:
+        travel_days = set(days)
+        dp = [0] * (days[-1]+1) # minimum dollars you have to spend for all days upto this day, day 0 is a dummy value
+
+        for d in range(days[-1]+1):
+            if d in travel_days:
+                dp[d] = min(dp[d-1] + costs[0], dp[max(d-7,0)]+costs[1], dp[max(d-30,0)]+costs[2]) 
+                #the current minimum dollars, is either the previous day's dp plus one day cost, or the 7-day earlier dp plus 7-day cost assuming he buy a 7-day ticket at d-6 day or ...
+            else:
+                dp[d] = dp[d-1]
+        #print(dp)
+        return dp[-1]
 
 # iterative 1d dp
 class Solution:
