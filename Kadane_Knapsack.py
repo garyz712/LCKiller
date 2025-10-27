@@ -130,6 +130,18 @@ class Solution:
                 dp[n]+=dp[n-i] #the new ways include all the original ways (without using i) and new number of ways after using i (dp[n-i])
         return dp[-1]
 
+
+# knapsack variant (each item can be used 0/multiple times): iterative 1d dp + no reversal + no 2D solution
+class Solution:
+    def combinationSum4(self, nums: List[int], target: int) -> int:
+        dp = [0] * ((target)+1)
+        dp[0] = 1
+        for i in range(1, ((target)+1)):
+            for n in nums:
+                if i>=n:
+                    dp[i] += dp[i-n]
+        return dp[-1]
+        
 # 0/1 Knapsack with random unordered update in row: 2D->1D 
 class Solution:
     def maxSumDivThree(self, nums: List[int]) -> int:
