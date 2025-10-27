@@ -105,7 +105,7 @@ class Solution:
         return dp[-1]
 
 # Unbounded 0/1 knapsack without need to loop backward because any item can be used infinite times and thus can be double counted
-# 1D DP: Why two loops?
+# 2D -> 1D DP: Why two loops?
 # Because at each amount i, you have MULTIPLE ways to reach it, depending on coin denominations.
 
 def coinChange(coins, amount):
@@ -141,7 +141,7 @@ class Solution:
                 if i>=n:
                     dp[i] += dp[i-n]
         return dp[-1]
-        
+
 # 0/1 Knapsack with random unordered update in row: 2D->1D 
 class Solution:
     def maxSumDivThree(self, nums: List[int]) -> int:
