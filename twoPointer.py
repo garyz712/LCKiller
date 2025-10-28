@@ -455,3 +455,22 @@ class Solution:
                 ithlist.append(products[left+j])
             res.append(ithlist)
         return res
+
+
+# increase the window size + keeping invalid window size constant
+class Solution:
+    def lengthOfLongestSubstringKDistinct(self, s: str, k: int) -> int:
+        max_size = 0
+        counter = collections.Counter()
+        
+        for right in range(len(s)):
+            counter[s[right]] += 1
+            
+            if len(counter) <= k:
+                max_size += 1
+            else: #no need to decrease since we already find a max
+                counter[s[right - max_size]] -= 1
+                if counter[s[right - max_size]] == 0:
+                    del counter[s[right - max_size]]
+
+        return max_size
