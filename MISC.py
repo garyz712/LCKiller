@@ -430,3 +430,13 @@ class Solution:
                 yield from dfs(node.right)
 
         return list(dfs(root1)) == list(dfs(root2))
+
+
+# hashing + ord(char)->number + string grouping
+class Solution:
+    def groupStrings(self, strings: List[str]) -> List[List[str]]:
+        groups = defaultdict(list)
+        for s in strings:
+            key = tuple((ord(c) - ord(s[0])) % 26 for c in s)
+            groups[key].append(s)
+        return list(groups.values())
