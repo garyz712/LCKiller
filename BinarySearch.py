@@ -522,7 +522,7 @@ class SnapshotArray:
         res = 0
         while left <= right: # we want to find the first id smaller than the desired id, in this case, desired id can be out of right bound; since res cannot directly be left / right, we must assign the res manually when left==right
             mid = (left + right) // 2
-            if l[mid][0] <= snap_id: # when the desired id is greater than mid, mid can still be the answer, therefore record mid first; however, if we use left = mid, this is an infinite loop since we are doing //2
+            if l[mid][0] <= snap_id: # when the desired id is <= mid, mid can still be the answer, therefore record mid first; however, if we use left = mid, this is an infinite loop since we are doing //2
                 res = mid
                 left = mid + 1
             else: # when the desired id is smaller than mid, mid can not be the answer, therefore decrease
@@ -537,6 +537,54 @@ class SnapshotArray:
         #         right = mid
         # #right might be the answer, OR the first id greater than the desired id (if the desired id is in the list), OR it may be the right bound (desired id may be out of bound)
         # return l[right][1] if l[right][0]<=snap_id else l[right-1][1]
+
+
+# binary search on tuple for finding the largest element <= timestamp in l
+class TimeMap:
+    def __init__(self):
+        self.timemap = collections.defaultdict(list)
+        
+
+    def set(self, key: str, value: str, timestamp: int) -> None:
+        self.timemap[key].append((timestamp, value))
+        
+
+    def get(self, key: str, timestamp: int) -> str:
+        l = self.timemap[key]
+        if not l or l[0][0] > timestamp:
+            return ""
+
+        # idx = bisect.bisect_right(arr, target)  # first > target
+
+        left, right = 0, len(l)-1
+        result = -1
+        # find the largest element <= timestamp in l
+        while left <= right: #candidate might need manual updates when left=right
+            mid = (left+right) //2 # compute left mid
+            if l[mid][0] <= timestamp:
+                result = mid        # candidate
+                left = mid + 1 # try to find larger
+            else:
+                right = mid - 1
+        #[1, 2, 3, 4, 5],  3.5
+        #[1, 2], 2
+        #[1], 1
+
+        # cause infinite loop because when left= mid -> does not move forward
+        # while left < right:
+        #     mid = (left+right) //2 # compute left mid
+        #     if l[mid] <= timestamp:
+        #         left = mid 
+        #     else:
+        #         right = mid - 1
+        
+        #print(l, result, timestamp, list(self.timemap[key].keys()))
+        return self.timemap[key][result][1]
+
+
+
+
+
 
 
 # Your SnapshotArray object will be instantiated and called as such:
@@ -620,7 +668,7 @@ class Solution:
             slow2 = nums[slow2]
         
         return slow
-s
+
 # unsorted binary search + assume the array is ascending/descending at some point
 class Solution:
     def findPeakElement(self, nums: List[int]) -> int:
