@@ -570,7 +570,7 @@ class TimeMap:
         #[1, 2], 2
         #[1], 1
 
-        # cause infinite loop because when left= mid -> does not move forward
+        # Option 2: cause infinite loop because when left= mid -> does not move forward
         # while left < right:
         #     mid = (left+right) //2 # compute left mid
         #     if l[mid] <= timestamp:
@@ -578,7 +578,18 @@ class TimeMap:
         #     else:
         #         right = mid - 1
         
-        #print(l, result, timestamp, list(self.timemap[key].keys()))
+        # Option 3: find the smallest number that is > target than -1
+        # while left < right:
+        #     mid = (left + right) // 2
+        #     if self.key_time_map[key][mid][0] <= timestamp:
+        #         left = mid + 1
+        #     else:
+        #         right = mid
+
+        # # If iterator points to first element it means, no time <= timestamp exists.
+        # return "" if right == 0 else self.key_time_map[key][right - 1][1]
+
+
         return self.timemap[key][result][1]
 
 
