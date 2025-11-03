@@ -212,3 +212,19 @@ def firstMissingPositive(self, nums: List[int]) -> int:
     # If all elements are at the correct index
     # the smallest missing positive number is n + 1
     return n + 1
+
+
+# Greedy wiggleSort: Reorder nums such that nums[0] <= nums[1] >= nums[2] <= nums[3]....
+class Solution:
+    def wiggleSort(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        for i in range(len(nums)-1):
+            if i%2==0:
+                if nums[i] > nums[i+1]:
+                    nums[i] , nums[i+1] = nums[i+1] , nums[i]               
+            else:
+                if nums[i] < nums[i+1]:
+                    nums[i] , nums[i+1] = nums[i+1] , nums[i]
+        return nums
