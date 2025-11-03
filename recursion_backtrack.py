@@ -119,6 +119,37 @@ class Solution:
         
         return [list(s) for s in res]
         
+
+
+#must use start instead of set to avoid backtrack or recursion duplicate
+class Solution:
+    def getFactors(self, n: int) -> List[List[int]]:
+        def dfs(n, path, start):
+            if path:
+                res.append(path + [n])
+            for i in range(start, int(n ** 0.5) + 1):
+                if n % i == 0:
+                    dfs(n // i, path + [i], i)
+        
+        res = []
+        dfs(n, [], 2)
+        return res
+
+    #must use start to avoid backtrack or recursion duplicate
+    def getFactors(self, n: int) -> List[List[int]]:
+        path = []
+        res = []
+        def dfs(n, start): # must use start to avoid duplicate because set does not work for v (2,2,3)  vs x (3,2,2). If using 3 as the start, you cannot use 2 because it was counted
+            if path:
+                res.append(path+[n]) # don't append n to path because n should be the last element, which can be decomposed
+            for i in range(start, int(n ** 0.5) + 1):
+                if n % i == 0:
+                    path.append(i)
+                    dfs(n//i, i)
+                    path.pop()
+        dfs(n, 2)
+        return res
+
 # three sets and four backtrack operation
 class Solution:
     def solveNQueens(self, n: int) -> List[List[str]]:
