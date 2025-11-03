@@ -150,7 +150,37 @@ class Solution:
                 return False
         return True #If all nodes are not in cycles, prereq can be satisfied
 
+# topological sort with source and destination: MUST USE DFS
+class Solution:
+    def leadsToDestination(self, n: int, edges: List[List[int]], source: int, destination: int) -> bool:
+        state = [0] * n  # 0=unvisited, 1=visiting, 2=done
+        graph = collections.defaultdict(list)
+        for e in edges:
+            graph[e[0]].append(e[1])
 
+        def dfs(node): #return False if a cycle is found or the leaf is not destination
+            if state[node] == 1:
+                return False #cycle found
+            if state[node] == 2:
+                return True # if this node is already checked and safe, no need for dfs and directly return True
+
+            state[node] = 1 # must go after the leaf check  
+                
+            if len(graph[node])==0: # if this is a leaf node, check if this is the destination node and return 
+                state[node] = 2 # or mark as 0 to ensure that the leaf is not marked as visiting, which will return False when other node accesses it
+                return node == destination
+            else:
+                for i in graph[node]:
+                    if not dfs(i): # check all its children, if no cycle and all leaves are destination, return True 
+                        return False
+
+                state[node] = 2 # this is for source's children to avoid double counting
+                return True
+
+        return dfs(source)
+
+
+        
 
 class Solution:
     def alienOrder(self, words: List[str]) -> str:
