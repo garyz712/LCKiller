@@ -257,3 +257,15 @@ class Solution:
             globMin = min(globMin, curMin)
 
         return max(globMax, total-globMin) if globMax>0 else globMax #if all nums are negative, total-globMin will be 0>globMax -> wrong! -> globMax
+
+# greedy max from three + 2D Kadane
+class Solution:
+    def maxDistance(self, arrays):
+        small, big = float('inf'), float('-inf')
+        res = 0
+        for a in arrays:
+            # this ensures that each array is used only for one element
+            res = max(res, a[-1] - small, big - a[0])
+            # now both min and max can be updated because they won't be used at the same time
+            small, big = min(small, a[0]), max(big, a[-1])
+        return res
