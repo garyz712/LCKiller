@@ -82,3 +82,22 @@ class Solution:
 #             for i in range(n):
 #                 matrix[i][j]=0
          
+
+# O(m+n) extra space for counting each row and col + O(nm * 2) time for finding the answer: matrix + hash table
+class Solution:    
+    def findLonelyPixel(self, picture: List[List[str]]) -> int:
+        cols = [0] *len(picture[0])
+        rows = [0] * len(picture)
+        res = 0
+        for i in range(len(picture)):
+            for j in range(len(picture[0])):
+                if picture[i][j] == "B":
+                    cols[j]+=1
+                    rows[i]+=1
+        for i in range(len(picture)):
+            for j in range(len(picture[0])):
+                if picture[i][j] == "B":
+                    if cols[j]==1 and rows[i]==1:
+                        res+=1
+                    
+        return res
