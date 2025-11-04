@@ -494,6 +494,15 @@ def lengthOfLIS(nums):
 
     return len(sub)
 
+# find the frequency of an element in sorted array using Binary Search
+class Solution:
+    def isMajorityElement(self, nums: List[int], target: int) -> bool:
+        import bisect
+        idx1 = bisect.bisect_left(nums, target)
+        # idx2 = bisect.bisect_right(nums, target)
+        # return idx2-idx1 > len(nums)//2 #find the frequency
+        return idx1 + len(nums)//2< len(nums) and nums[idx1 + len(nums)//2] == target # check if the frequency is greater than len(nums)//2
+        
 # binary search for the first number smaller than desired + hashmap +list of list of list
 class SnapshotArray:
     def __init__(self, length: int):
