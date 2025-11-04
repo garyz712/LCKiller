@@ -298,3 +298,35 @@ class Solution:
                     heapq.heappush(heapHigh, costs[r])
                     r-=1
         return total
+
+
+# Store Multiple Heaps in a dict, Or a single big heap? + pop right after push
+class Solution:
+    def highFive(self, items: list[list[int]]) -> list[list[int]]:
+        # Step 1: Group scores by student
+        scores = defaultdict(list)
+        for sid, sc in items:
+            heappush(scores[sid], sc)               # push all scores
+            if len(scores[sid]) > 5:                # keep only top-5
+                heappop(scores[sid])                # discard lowest
+
+        # Step 2: Build result in sorted student order
+        return [[sid, sum(scores[sid]) // 5]
+                for sid in sorted(scores)]
+
+    # Or a single big heap
+    # def highFive(self, items: List[List[int]]) -> List[List[int]]:
+    #     import heapq
+    #     l = []
+    #     count = collections.defaultdict(lambda: [0, 0]) # occurance
+    #     for ID, score in items:
+    #         heapq.heappush(l, (-score, ID))
+    #     while l:
+    #         score, ID = heapq.heappop(l)
+    #         if count[ID][0]<5:
+    #             count[ID][1] -= score
+    #             count[ID][0] += 1
+    #     res = []
+    #     for k in sorted(count.keys()):
+    #         res.append([k, count[k][1]//5])
+    #     return res
