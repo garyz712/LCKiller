@@ -245,3 +245,35 @@ class Solution:
 
             count+=1
         return count if foundexit else -1
+
+
+# mixed BFS + DFS
+class Solution:
+    def hasPath(self, maze: List[List[int]], start: List[int], destination: List[int]) -> bool:
+        
+        m, n = len(maze), len(maze[0])
+        visited = set()
+        q = [(start[0], start[1])] # only store stop points
+        visited.add((start[0], start[1]))
+        
+        dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right
+        
+        while q:
+            x, y = q.pop(0)  # BFS
+            
+            if [x, y] == destination:
+                return True
+                
+            for dx, dy in dirs:
+                nx, ny = x, y
+                # Roll in this direction until hit wall or boundary
+                while 0 <= nx + dx < m and 0 <= ny + dy < n and maze[nx + dx][ny + dy] == 0: # do partial DFS to reach a stop point
+                    nx += dx
+                    ny += dy
+                # Now (nx, ny) is the stopping point
+                if (nx, ny) not in visited:
+                    visited.add((nx, ny))
+                    q.append((nx, ny))
+                # if the stop point is visited, don't add it to the queue
+        
+        return False
