@@ -474,3 +474,53 @@ class Solution:
                     del counter[s[right - max_size]]
 
         return max_size
+
+
+# Two pointers on two Different Lists with pointer reset
+class Solution:
+    def shortestWay(self, source: str, target: str) -> int:
+        i, j = 0, 0
+        count = 0
+        
+        while j < len(target):
+            i = 0
+            prev_j = j  # to detect if we make progress
+            
+            # try to match as many target chars as possible in one scan
+            while i < len(source) and j < len(target):
+                if source[i] == target[j]:
+                    j += 1
+                i += 1
+            
+            # no progress means target[j] not in source
+            if prev_j == j:
+                return -1
+            count += 1
+        
+        return count
+
+    def shortestWay(self, source: str, target: str) -> int:
+        source_chars = set(source)
+        for char in target:
+            if char not in source_chars:
+                return -1
+
+        Sprt, Tprt = 0, 0
+        res = 0
+        while Tprt<len(target):
+            #print(Tprt, Sprt)
+            if target[Tprt] == source[Sprt]:
+                Sprt += 1
+                Tprt += 1
+                #print("if", Tprt, Sprt)                
+            else:
+                Sprt += 1
+
+            if Sprt == len(source):
+                res += 1
+                Sprt = 0
+
+            # if Tprt == len(target) and Sprt!=0:
+            #     res +=1
+
+        return res if Sprt==0 else res+1
