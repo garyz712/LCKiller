@@ -296,3 +296,50 @@ class Solution:
                 dp[i] += dp[j] * dp[i - j - 1]
                 dp[i] %= m
         return dp[numPeople // 2]
+
+
+# O(n^2 ~ O n^3) -> Pseudo 3D DP / 2D DP with set + futuristic DP with set storing preivous actions
+class Solution:
+    def canCross(self, stones: List[int]) -> bool:
+
+        n = len(stones)
+        dp = [set() for _ in range(n)]
+        dp[0].add(0)  # can reach stone 0 with jump 0
+
+
+        for j in range(1, n):
+            for i in range(j):
+                k = stones[j] - stones[i]
+                # if from stone i we could reach with k-1, k, or k+1, we can now reach j with jump k
+                if k-1 in dp[i] or k in dp[i] or k+1 in dp[i]:
+                    dp[j].add(k)
+            if j == n - 1 and dp[j]:
+                return True
+
+        return len(dp[-1]) > 0
+
+    def canCross(self, stones: List[int]) -> bool:
+
+        if stones[0] != 0 or len(stones) < 2 or stones[1] != 1:
+            return len(stones) == 1
+        
+        stone_set = set(stones)
+        reachable = {}  # pos -> set of possible last jumps (k)
+        reachable[0] = {0}
+        
+        for pos in stones:
+            if pos not in reachable:
+                continue
+            for k in reachable[pos]: # isntead of checking all previous states, it check only for all previous jumps, update the future states
+                for delta in [-1, 0, 1]:
+                    next_k = k + delta
+                    if next_k <= 0:
+                        continue
+                    next_pos = pos + next_k
+                    if next_pos in stone_set:
+                        if next_pos not in reachable:
+                            reachable[next_pos] = set()
+                        reachable[next_pos].add(next_k)
+                        if next_pos == stones[-1]:
+                            return True
+        return stones[-1] in reachable
