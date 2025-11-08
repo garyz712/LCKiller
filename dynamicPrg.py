@@ -343,3 +343,5 @@ class Solution:
                         if next_pos == stones[-1]:
                             return True
         return stones[-1] in reachable
+
+    
