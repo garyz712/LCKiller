@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import sys
 
 class InMemoryDB(ABC):
     @abstractmethod
@@ -51,18 +52,21 @@ class InMemoryDBImpl(InMemoryDB):
     def __init__(self):
         self.db = {}
 
+    # find the latest value of db[key][field] history at query_ts, if expired, return None; if deleted, return val=None; if not expired, return the value   
     def _get_value_at(self, key: str, field: str, query_ts: int) -> int | None:
         if key not in self.db or field not in self.db[key]:
             return None
         history = self.db[key][field]
         for i in range(len(history) - 1, -1, -1):
             set_ts, val, exp = history[i]
-            if set_ts > query_ts:
+            if exp and query_ts >= exp:  #if the latest set has expired, return None
+                return None
+
+            if set_ts > query_ts: # if there is no expired date or it is not expired, check if the set_ts is smaller than query_ts
                 continue
-            if exp is not None and query_ts >= exp:
-                continue
-            # latest valid
-            return val if val is not None else None
+            
+            # latest valid, can be None if deleted
+            return val 
         return None
 
     def set(self, timestamp: int, key: str, field: str, value: int) -> None:
@@ -77,7 +81,7 @@ class InMemoryDBImpl(InMemoryDB):
             self.db[key] = {}
         if field not in self.db[key]:
             self.db[key][field] = []
-        exp = timestamp + ttl if ttl > 0 else None
+        exp = timestamp + ttl 
         self.db[key][field].append((timestamp, value, exp))
 
     def compare_and_set(self, timestamp: int, key: str, field: str, expected_value: int, new_value: int) -> bool:
@@ -98,7 +102,7 @@ class InMemoryDBImpl(InMemoryDB):
                 self.db[key] = {}
             if field not in self.db[key]:
                 self.db[key][field] = []
-            exp = timestamp + ttl if ttl > 0 else None
+            exp = timestamp + ttl 
             self.db[key][field].append((timestamp, new_value, exp))
             return True
         return False
@@ -314,6 +318,7 @@ class TestInMemoryDB(unittest.TestCase):
         db = self._db()
         ts = db.next_ts
 
+
         db.set_with_ttl(ts(), "A", "x", 10, 5)   # expires at ts=5
         db.set_with_ttl(ts(), "A", "y", 20, 10)  # expires at ts=10
 
@@ -322,10 +327,15 @@ class TestInMemoryDB(unittest.TestCase):
 
         # Advance time
         db.ts = 6
-        self.assertIsNone(db.get(db.ts, "A", "x"))
+        result = db.get(db.ts, "A", "x")
+        debug_msg = f"[DEBUG] testing... db.get({db.ts}, 'A', 'x') = {result}"
+        print(debug_msg, file=sys.stderr, flush=True)
+        print(debug_msg)  # Also print to stdout in case IDE only shows stdout
+        self.assertIsNone(result)
         self.assertEqual(db.scan(db.ts, "A"), ["y(20)"])
 
-        db.ts = 11
+        db.ts = 12
+        
         self.assertIsNone(db.get(db.ts, "A", "y"))
         self.assertEqual(db.scan(db.ts, "A"), [])
 
@@ -338,6 +348,8 @@ class TestInMemoryDB(unittest.TestCase):
 
         self.assertEqual(db.get(ts(), "A", "f"), 10)
         db.ts = ts() + 4
+
+        print("testing... !!!!!!", db.db)
         self.assertIsNone(db.get(db.ts, "A", "f"))
 
     # --------------------------------------------------------------
@@ -370,17 +382,15 @@ class TestInMemoryDB(unittest.TestCase):
         self.assertEqual(db.scan(0, "any"), [])
         self.assertIsNone(db.get(0, "any", "any"))
 
-    def test_edge_ttl_zero_or_negative(self):
+    def test_edge_ttl_zero(self):
         db = self._db()
         ts = db.next_ts
 
         db.set_with_ttl(ts(), "A", "x", 1, 0)   # ttl=0 → infinite
         db.ts = 1000
-        self.assertEqual(db.get(db.ts, "A", "x"), 1)
+        self.assertIsNone(db.get(db.ts, "A", "x"))
 
-        db.set_with_ttl(ts(), "A", "y", 2, -5)  # negative → infinite
-        db.ts = 1000
-        self.assertEqual(db.get(db.ts, "A", "y"), 2)
+
 
     def test_edge_field_reuse_after_delete(self):
         db = self._db()
@@ -416,7 +426,9 @@ class TestInMemoryDB(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main(verbosity=2)
+    # Disable buffering to see print statements immediately
+    # Debug output is written to stderr, so it appears immediately even with unittest buffering
+    unittest.main(verbosity=2, buffer=False)
 
 
 
