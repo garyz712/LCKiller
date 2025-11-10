@@ -59,13 +59,14 @@ class InMemoryDBImpl(InMemoryDB):
         history = self.db[key][field]
         for i in range(len(history) - 1, -1, -1):
             set_ts, val, exp = history[i]
-            if exp and query_ts >= exp:  #if the latest set has expired, return None
+
+            if exp and query_ts >= exp:  #if the latest set has expired date and it is expired at query_ts, return None
                 return None
 
             if set_ts > query_ts: # if there is no expired date or it is not expired, check if the set_ts is smaller than query_ts
                 continue
             
-            # latest valid, can be None if deleted
+            # if the set_ts is smaller than query_ts and it is not expired, return the latest valid value, which can be None if deleted
             return val 
         return None
 
