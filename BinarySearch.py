@@ -689,7 +689,7 @@ class Solution:
         
         return slow
 
-# unsorted binary search + assume the array is ascending/descending at some point
+# unsorted binary search + assume the array is ascending -> descending at some point (only one peak)
 class Solution:
     def findPeakElement(self, nums: List[int]) -> int:
         left, right = 0, len(nums)-1
