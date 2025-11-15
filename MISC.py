@@ -440,3 +440,36 @@ class Solution:
             key = tuple((ord(c) - ord(s[0])) % 26 for c in s)
             groups[key].append(s)
         return list(groups.values())
+
+
+# Binary Index Tree: remove the rightmost 1 bit from children -> root
+class NumArray:
+    
+    def __init__(self, nums):
+        self.n = len(nums)
+        self.nums = nums[:]             # original array for indexing
+        self.bit = [0] * (self.n + 1)   # Fenwick Tree
+        for i in range(self.n):
+            self._update_bit(i, nums[i])
+
+    def _update_bit(self, index, delta):
+        index += 1  # 1-based indexing for BIT
+        while index <= self.n:
+            self.bit[index] += delta # storing the partial sum from parent -> children index (e.g. (4, 6])
+            index += index & -index # magic updating
+
+    def _query_bit(self, index): # log(n) finding the sum from idx 0 -> index
+        index += 1
+        total = 0
+        while index > 0:
+            total += self.bit[index]
+            index -= index & -index
+        return total
+
+    def update(self, index, val):
+        delta = val - self.nums[index]
+        self.nums[index] = val
+        self._update_bit(index, delta)
+
+    def sumRange(self, left, right):
+        return self._query_bit(right) - self._query_bit(left - 1) if left > 0 else self._query_bit(right)
