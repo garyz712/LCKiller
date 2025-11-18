@@ -1,48 +1,42 @@
-# Asking Leetcode is stupid, but we can crack it fast.
+# Algo
 
-A collection of algorithm implementations in Python covering various computer science topics.
+Python-first playground for classic algorithms and modern ML experiments. The repo mixes concise script files (ideal for quick interview refreshers) with exploratory notebooks for deep dives.
 
-## Contents
+## Repository Map
 
-### Data Structures & Algorithms
-- **Sorting**: Various sorting algorithms (`sorting.py`)
-- **Search**: Binary search implementation (`BinarySearch.py`)
-- **Tree & Linked List**: Tree and linked list operations (`tree_linkedlist.py`)
+| Theme | Highlights | Entry Points |
+| --- | --- | --- |
+| Sorting & Search | quicksort, mergesort, heap sort, binary search, two-pointer tricks | `sorting.py`, `BinarySearch.py`, `twoPointer.py` |
+| Trees & Linked Lists | traversal patterns, balanced-tree helpers, pointer rewiring | `tree_linkedlist.py` |
+| Graph Algorithms | queue-based BFS, stack-based DFS, Dijkstra with `heapq`, Bellman-Ford, MST variants, topological sort | `BFSqueue.py`, `DFSstack.py`, `DijkstraHeapq.py`, `Bellman Ford.py`, `MST.py`, `topological.py` |
+| Dynamic Programming | knapsack variants, Kadane, tabulation/ memoization templates | `dynamicPrg.py`, `Kadane_Knapsack.py` |
+| Greedy / Backtracking | interval scheduling, coin change, recursion utilities | `Greedy.py`, `recursion_backtrack.py` |
+| Matrix & Numerical | 2D sweep algorithms, prefix sums, grid traversal helpers | `matrix.py` |
+| Systems & Misc | high-level system design sketches, utility grab bag | `system design.py`, `MISC.py`, `progressive.py` |
+| Networking | bandwidth smoothing heuristics | `equalizeBandwidth.py` |
+| Deep Learning | Transformer / ViT / BERT playground, classical DNN + KNN experiments | `Transformer_ViT_BERT.ipynb`, `DNN_KFold_KNN.ipynb` |
 
-### Graph Algorithms
-- **BFS**: Breadth-First Search using queue (`BFSqueue.py`)
-- **DFS**: Depth-First Search using stack (`DFSstack.py`)
-- **Dijkstra**: Shortest path algorithm with heap (`DijkstraHeapq.py`)
-- **Bellman Ford**: Shortest path algorithm (`Bellman Ford.py`)
-- **MST**: Minimum Spanning Tree algorithms (`MST.py`)
-- **Topological Sort**: Topological sorting (`topological.py`)
+## How to Use
 
-### Dynamic Programming
-- **Knapsack**: 0/1 Knapsack problem (`01Knapsack.py`)
-- **Dynamic Programming**: Various DP problems (`dynamicPrg.py`)
+1. Ensure Python 3.10+ is available; install any ad-hoc deps referenced inside specific scripts (most rely only on the standard library).
+2. Run individual scripts directly, e.g.:
+   ```bash
+   python /Users/junyang/Desktop/JOB/Algo/DijkstraHeapq.py
+   ```
+3. Open notebooks in VS Code, JupyterLab, or Colab for interactive experimentation with the Transformer/ViT/BERT stack or KNN baselines.
 
-### Other Algorithms
-- **Greedy**: Greedy algorithm implementations (`Greedy.py`)
-- **Two Pointer**: Two pointer technique (`twoPointer.py`)
-- **Backtracking**: Recursion and backtracking (`recursion:backtrack.py`)
-- **Matrix**: Matrix operations (`matrix.py`)
-- **System Design**: System design concepts (`system design.py`)
+## Suggested Study Paths
 
-### Machine Learning
-- **Transformer/ViT/MLP**: Neural network implementations (`Transformer_ViT_MLP.ipynb`)
-
-### Miscellaneous
-- **MISC**: Miscellaneous algorithms and utilities (`MISC.py`)
-- **Bandwidth Equalization**: Network bandwidth optimization (`equalizeBandwidth.py`)
-
-## Usage
-
-Each file contains implementations of specific algorithms with examples and test cases. Feel free to explore and use these implementations for learning and reference.
+- **Interview sprint**: skim `sorting.py`, `BinarySearch.py`, `twoPointer.py`, then iterate through `tree_linkedlist.py` and `dynamicPrg.py`.
+- **Graphs masterclass**: queue → stack → priority queue by following `BFSqueue.py`, `DFSstack.py`, `DijkstraHeapq.py`, and `MST.py`.
+- **ML refresh**: replicate the ViT vs. vanilla Transformer comparison in `Transformer_ViT_BERT.ipynb`, then contrast with `DNN_KFold_KNN.ipynb`.
 
 ## Contributing
 
-Feel free to contribute by adding new algorithms, improving existing implementations, or fixing bugs.
+1. Fork and create a topic branch.
+2. Add a focused implementation or polish an existing one (tests or example invocations are appreciated).
+3. Open a PR describing the algorithmic idea, complexity, and any references.
 
 ## License
 
-This project is open source and available under the MIT License.
+MIT — see `LICENSE` (or add one if missing). Use freely for learning, interviews, or production inspiration.*** End Patch*** End Patch
