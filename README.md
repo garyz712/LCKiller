@@ -1,4 +1,4 @@
-# Algo
+# Asking Leetcode is stupid, so let's crack it fast.
 
 Python-first playground for classic algorithms and modern ML experiments. The repo mixes concise script files (ideal for quick interview refreshers) with exploratory notebooks for deep dives.
 
