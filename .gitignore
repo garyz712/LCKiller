@@ -123,3 +123,6 @@ dmypy.json
 # Temporary files
 *.tmp
 *.temp
+
+# Data files
+data/
