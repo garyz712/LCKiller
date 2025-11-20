@@ -228,3 +228,49 @@ class Solution:
                 if nums[i] < nums[i+1]:
                     nums[i] , nums[i+1] = nums[i+1] , nums[i]
         return nums
+
+
+# quick select the kth element in unsorted array
+import random
+
+def quickselect(arr, k):
+    """
+    Return the k-th smallest element (0-indexed) in unsorted arr.
+    Modifies arr in-place (like real std::nth_element).
+    Average time: O(n), Worst: O(n²) → practically never happens never.
+    """
+    if not arr:
+        raise ValueError("array is empty")
+    
+    def select(left, right, k):
+        while True:                              # tail-recursion optimized
+            if left == right:
+                return arr[left]
+            
+            # Random pivot → makes worst case astronomically unlikely
+            pivot_idx = random.randint(left, right)
+            
+            # Partition around the pivot (Hoare or Lomuto – both are standard)
+            pivot_idx = partition(left, right, pivot_idx)
+            
+            if k == pivot_idx:
+                return arr[k]
+            elif k < pivot_idx:
+                right = pivot_idx - 1            # search only left part
+            else:
+                left = pivot_idx + 1             # search only right part
+    
+    return select(0, len(arr)-1, k)
+
+
+# Standard Lomuto partition used in CLRS and most textbooks
+def partition(left, right, pivot_idx):
+    pivot = arr[pivot_idx]
+    arr[pivot_idx], arr[right] = arr[right], arr[pivot_idx]   # move pivot to end
+    store_idx = left
+    for i in range(left, right):
+        if arr[i] < pivot:
+            arr[i], arr[store_idx] = arr[store_idx], arr[i]
+            store_idx += 1
+    arr[right], arr[store_idx] = arr[store_idx], arr[right]      # move pivot to final place
+    return store_idx
