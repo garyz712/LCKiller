@@ -365,6 +365,8 @@ class Solution:
                 row+=1
         return False
 
+
+#do one round binary search on two array to get their median + ensure every mid search partition two arrays into half
 class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
         if len(nums1) > len(nums2): #assume A is shorter than B so the left half hold the median when n+m is odd
@@ -396,10 +398,11 @@ class Solution:
                     return ( max(Aleft, Bleft) + min(Bright, Aright)) /2
                 else: # if nums is odd, the median is in left half
                     return max(Aleft, Bleft)
-            elif Aleft > Bright: # if lefthalfA is longer, search left in A
+            elif Aleft > Bright: # A's left partition too large, reduce left elements from A (search left in A)
                 right = midA-1
-            elif Bleft > Aright: # if lefthalfB is longer, search right in A
+            elif Bleft > Aright: # B's left partition too large, reduce left elements from B (search right in A)
                 left = midA+1
+            # Aleft > Aright or Bleft > Bright will be impossible because they are sorted
 
 
 #Double ways:
