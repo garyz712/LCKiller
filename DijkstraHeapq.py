@@ -1,6 +1,7 @@
 from collections import defaultdict
 import heapq
 
+# Old dijkstra with parentsMap and visited set
 def dijkstraOld(G, startingNode):
 	visited = set()
 	parentsMap = {}
@@ -24,6 +25,7 @@ def dijkstraOld(G, startingNode):
                 
 	return nodeCosts
 
+# Best Dijkstra with Heap
 def dijkstra(n, edges, src):
     """
     Find shortest paths from source to all vertices using Dijkstra's Algorithm
@@ -92,6 +94,43 @@ def test_dijkstra():
 if __name__ == "__main__":
     test_dijkstra()
 
+
+# Dijkstra on the maze
+class Solution:
+    def shortestDistance(self, maze: List[List[int]], start: List[int], destination: List[int]) -> int:
+        m, n = len(maze), len(maze[0])
+        dist = [[float('inf')] * n for _ in range(m)] # this is the graph dict that store the minimum distance from the source to a certain stop node
+        dist[start[0]][start[1]] = 0
+        
+        pq = [(0, start[0], start[1])]  # (distance, x, y)
+        
+        directions = [(1,0), (-1,0), (0,1), (0,-1)]
+        
+        while pq:
+            d, x, y = heapq.heappop(pq)
+            
+            # If we already found a shorter path, skip
+            if d > dist[x][y]:
+                continue
+                
+            # Roll in all 4 directions
+            for dx, dy in directions:
+                nx, ny = x, y
+                count = d
+                
+                # keep rolling until hitting wall
+                while 0 <= nx + dx < m and 0 <= ny + dy < n and maze[nx + dx][ny + dy] == 0:
+                    nx += dx
+                    ny += dy
+                    count += 1
+                    
+                
+                # If this roll gives a shorter distance, update
+                if d < dist[nx][ny]:
+                    dist[nx][ny] = count
+                    heapq.heappush(pq, (count, nx, ny))
+        
+        return dist[destination[0]][destination[1]] if dist[destination[0]][destination[1]] != float('inf') else -1
 
 
 class Solution:
