@@ -17,6 +17,18 @@ class Solution:
             res += rows[k] * cols.get(k, 0)
         return res
         
+# validate if symmetric word matrix
+class Solution:
+    def validWordSquare(self, words: List[str]) -> bool:
+        n = len(words)
+        for i in range(n):
+            for j in range(len(words[i])):
+                try:
+                    if words[i][j] != words[j][i]:
+                        return False
+                except:
+                    return False
+        return True
 
 # in place matrix modification
 class Solution:
