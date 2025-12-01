@@ -132,6 +132,75 @@ class Solution:
         
         return dist[destination[0]][destination[1]] if dist[destination[0]][destination[1]] != float('inf') else -1
 
+# 4 tuple heap dijkstra + path
+class Solution:
+    def findShortestWay(self, maze: List[List[int]], ball: List[int], hole: List[int]) -> str:
+        """
+        maze: List[List[int]] with 0 open, 1 wall
+        ball: [start_row, start_col]
+        hole: [hole_row, hole_col]
+        returns: shortest path string or "impossible"
+        """
+        m, n = len(maze), len(maze[0])
+        sx, sy = ball
+        hx, hy = hole
+
+        # directions with their char; we'll sort by char to enforce lexicographic tie-break
+        dirs = [(-1, 0, 'u'), (1, 0, 'd'), (0, -1, 'l'), (0, 1, 'r')]
+        dirs.sort(key=lambda t: t[2])  # ensures 'd' < 'l' < 'r' < 'u' tie order by char value
+
+        # distance and best path seen so far for each cell
+        INF = 10**9
+        dist = [[INF]*n for _ in range(m)]
+        path = [[None]*n for _ in range(m)] # the shortest path from source to a node
+
+        # min-heap ordered by a 4 tuple (distance, path-string, node x, node y)
+        heap = []
+        dist[sx][sy] = 0
+        path[sx][sy] = ""
+        heapq.heappush(heap, (0, "", sx, sy))
+
+        while heap:
+            d, p, x, y = heapq.heappop(heap)
+
+            # If we popped a stale state, skip
+            if d != dist[x][y] or p != path[x][y]:
+                continue
+
+            # If we reached the hole, current (d,p) is optimal due to heap order
+            if (x, y) == (hx, hy):
+                return p
+
+            # try rolling in each direction
+            for dx, dy, ch in dirs:
+                nx, ny = x, y
+                steps = 0
+
+                # roll until next cell is wall or we hit the hole
+                while True:
+                    tx, ty = nx + dx, ny + dy
+                    if not (0 <= tx < m and 0 <= ty < n) or maze[tx][ty] == 1:
+                        break
+                    nx, ny = tx, ty
+                    steps += 1
+                    if (nx, ny) == (hx, hy):
+                        # stop immediately if we reached hole
+                        break
+
+                if steps == 0:
+                    continue
+
+                nd = d + steps
+                npth = p + ch
+
+                # update if strictly better distance or same distance but lexicographically smaller path
+                if nd < dist[nx][ny] or (nd == dist[nx][ny] and (path[nx][ny] is None or npth < path[nx][ny])):
+                    dist[nx][ny] = nd
+                    path[nx][ny] = npth
+                    heapq.heappush(heap, (nd, npth, nx, ny))
+
+        return "impossible"
+
 
 class Solution:
     def findKthLargest(self, nums: List[int], k: int) -> int:
