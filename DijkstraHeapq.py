@@ -132,7 +132,7 @@ class Solution:
         
         return dist[destination[0]][destination[1]] if dist[destination[0]][destination[1]] != float('inf') else -1
 
-# 4 tuple heap dijkstra + path
+# 4 tuple heap dijkstra + path dict + distance dict
 class Solution:
     def findShortestWay(self, maze: List[List[int]], ball: List[int], hole: List[int]) -> str:
         """
