@@ -119,6 +119,26 @@ class Solution:
         
         return [list(s) for s in res]
         
+# recursion build on previous long output
+class Solution:
+    def findStrobogrammatic(self, n: int) -> List[str]:
+        # 0 (cannot be leading 0), 1, 6/9, 8
+        mapping = ["11", "69", "96", "88"]
+        #@lru_cache(None)
+        def dfs(x):
+            if x==0:
+                return [""]
+            if x==1:
+                return ["0","1","8"]
+            res = []
+            for s in dfs(x-2):
+                for k, v in mapping:                   
+                    res.append(k + s + v)
+                if x!=n:
+                    res.append("0" + s + "0")
+            return res
+
+        return dfs(n)
 
 
 #must use start instead of set to avoid backtrack or recursion duplicate
