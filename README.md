@@ -14,7 +14,7 @@ Python-first playground for classic algorithms and modern ML experiments. The re
 | Matrix & Numerical | 2D sweep algorithms, prefix sums, grid traversal helpers | `matrix.py` |
 | Systems & Misc | high-level system design sketches, utility grab bag | `system design.py`, `MISC.py`, `progressive.py` |
 | Networking | bandwidth smoothing heuristics | `equalizeBandwidth.py` |
-| Deep Learning | Transformer / ViT / BERT playground, classical DNN + KNN experiments | `Transformer_ViT_BERT.ipynb`, `DNN_KFold_KNN.ipynb` |
+| Deep Learning | Transformer / ViT / BERT playground, classical DNN + CNN + KNN experiments | `Transformer_ViT_BERT.ipynb`, `DNN_CNN_KNN.ipynb` |
 
 ## How to Use
 
