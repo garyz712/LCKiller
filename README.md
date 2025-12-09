@@ -29,7 +29,7 @@ Python-first playground for classic algorithms and modern ML experiments. The re
 
 - **Interview sprint**: skim `sorting.py`, `BinarySearch.py`, `twoPointer.py`, then iterate through `tree_linkedlist.py` and `dynamicPrg.py`.
 - **Graphs masterclass**: queue → stack → priority queue by following `BFSqueue.py`, `DFSstack.py`, `DijkstraHeapq.py`, and `MST.py`.
-- **ML refresh**: replicate the ViT vs. vanilla Transformer comparison in `Transformer_ViT_BERT.ipynb`, then contrast with `DNN_KFold_KNN.ipynb`.
+- **ML refresh**: replicate the ViT vs. vanilla Transformer comparison in `Transformer_ViT_BERT.ipynb`, then contrast with `DNN_CNN_KNN.ipynb`.
 
 ## Contributing
 
