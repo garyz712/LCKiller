@@ -21,7 +21,7 @@ Python-first playground for classic algorithms and modern ML experiments. The re
 1. Ensure Python 3.10+ is available; install any ad-hoc deps referenced inside specific scripts (most rely only on the standard library).
 2. Run individual scripts directly, e.g.:
    ```bash
-   python /Users/junyang/Desktop/JOB/Algo/DijkstraHeapq.py
+   python /Users/user/Desktop/JOB/Algo/DijkstraHeapq.py
    ```
 3. Open notebooks in VS Code, JupyterLab, or Colab for interactive experimentation with the Transformer/ViT/BERT stack or KNN baselines.
 
