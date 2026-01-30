@@ -1,3 +1,28 @@
+
+# two pointer reverse twice
+class Solution:
+    def reverseWords(self, s: List[str]) -> None:
+        """
+        Do not return anything, modify s in-place instead.
+        """
+        s.reverse()
+        left = 0
+        for right in range(len(s)):
+            if s[right]==" ":
+                #print(s[right])
+                self.reverse(s, left, right-1)
+                left = right+1
+            elif right == len(s)-1:
+                self.reverse(s, left, right)
+    
+    #two pointer reverse
+    def reverse(self, l, left, right):
+        while left<right:
+            l[left], l[right] = l[right], l[left]
+            left+=1
+            right-=1
+
+
 class Solution: # classic sliding window / two pointers problem
     def lengthOfLongestSubstring(self, s: str) -> int:
         d = {}
