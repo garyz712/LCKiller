@@ -348,12 +348,32 @@ class Solution:
                 stack.append(int(token))
         return stack[0]
         
+# basic calculator with nested parenthesis and unary operator cases but without */
+# ( : [0, 1]
+# 1 : [0, 1]
+# + : [0, 1]
+# ( : [0, 1, 1, 1]
+# 4 : [0, 1, 1, 1]
+# + : [0, 1, 1, 1]
+# 5 : [0, 1, 1, 1]
+# + : [0, 1, 1, 1]
+# 2 : [0, 1, 1, 1]
+# ) : [0, 1]
+# - : [0, 1]
+# 3 : [0, 1]
+# ) : []
+# + : []
+# ( : [9, 1]
+# 6 : [9, 1]
+# + : [9, 1]
+# 8 : [9, 1]
+# ) : []
 
 class Solution:
     def calculate(self, s: str) -> int:
         sign = 1
         res=0 # accumulate partial res in ()
-        stack = [] # handle multi level ()
+        stack = [] # handle multi level () by storing the previous res/sign 
         num = 0
         for i in s:
             if i.isdigit():
@@ -381,6 +401,59 @@ class Solution:
                 continue
         return res+ sign * num # handle the last num and one num case
         #1+(4+5+2)-3
+
+
+# Easy classic calculator with ()*/ but without handling unary operator and nested parentheses
+# 2 : []
+# * : [2]
+# ( : [2, '*']
+# 5 : [2, '*']
+# + : [2, '*', 5]
+# 5 : [2, '*', 5]
+# * : [2, '*', 5, 5]
+# 2 : [2, '*', 5, 5]
+# ) : [2]
+# / : [30]
+# 3 : [30]
+# @ : [10]
+class Solution:
+    def calculate(self, s: str) -> int:
+        def evaluate(x, y, operator):
+            if operator == "+":
+                return x
+            if operator == "-":
+                return -x
+            if operator == "*":
+                return x * y
+            return int(x / y)
+        
+        stack = [] # finally number only: maintaining all the addable temporary result and pop whenever we see */
+        curr = 0
+        previous_operator = "+"
+        s += "@" # dumpy operator to process the last number
+        
+        for c in s:           
+            if c.isdigit():
+                curr = curr * 10 + int(c)
+            elif c == "(":
+                stack.append(previous_operator)
+                previous_operator = "+" # update the previous operator to accumulate temporary result for later stack.append(evaluate(curr, 0, previous_operator))
+
+            else: # whenever we see the next operator, we do the previous operation using stack.pop(), curr, previous_operator
+                if previous_operator in "*/":
+                    stack.append(evaluate(stack.pop(), curr, previous_operator))
+                else:
+                    stack.append(evaluate(curr, 0, previous_operator))
+                
+                curr = 0
+                previous_operator = c # getting ready for next operation
+                if c == ")": # compute all the temporary addable results in current ()
+                    while type(stack[-1]) == int:
+                        curr += stack.pop()
+                    previous_operator = stack.pop() # prepare for the next operation after ()
+            print(c, ":",stack)
+        return sum(stack)
+
 
 class Solution:
     def decodeString(self, s: str) -> str:
