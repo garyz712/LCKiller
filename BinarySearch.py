@@ -721,3 +721,60 @@ class Solution:
 
         # [100,300,400]
         return arr[0] + left * diff
+
+
+# Tenary Search vs Binary Search
+
+#class ArrayReader(object):
+#	 # Compares the sum of arr[l..r] with the sum of arr[x..y]
+#	 # return 1 if sum(arr[l..r]) > sum(arr[x..y])
+#	 # return 0 if sum(arr[l..r]) == sum(arr[x..y])
+#	 # return -1 if sum(arr[l..r]) < sum(arr[x..y])
+#    def compareSub(self, l: int, r: int, x: int, y: int) -> int:
+#
+#	 # Returns the length of the array
+#    def length(self) -> int:
+#
+
+
+class Solution:
+    def getIndex(self, reader: 'ArrayReader') -> int:
+        left, right = 0, reader.length() - 1
+        
+        while left < right:
+            # Divide into three parts
+            len_third = (right - left) // 3
+            mid1 = left + len_third
+            mid2 = left + 2 * len_third + 1   # +1 to handle odd lengths better
+            
+            cmp = reader.compareSub(left, mid1, mid1 + 1, mid2)
+            
+            if cmp == 0:
+                left = mid2 + 1          # Large element is after mid2
+            elif cmp == 1:
+                right = mid1             # Large element is in left third
+            else:
+                left, right = mid1 + 1, mid2  # Large element is in middle third
+        
+        return left
+        
+    # def getIndex(self, reader: 'ArrayReader') -> int:
+    #     left, right = 0, reader.length()-1
+    #     while left<right:
+    #         mid = (left + right)//2
+    #         if (right - left+1)%2==0:
+    #             #print(mid)                                     
+    #             if reader.compareSub(left, mid, mid+1, right) == 1:
+    #                 right = mid
+    #             else:
+    #                 left = mid+1            
+    #         else:       
+    #             res = reader.compareSub(left, mid-1, mid+1, right)
+    #             if  res== 0:
+    #                 return mid   
+    #             elif res == 1:
+    #                 right = mid-1
+    #             else:
+    #                 left = mid + 1
+            
+    #     return right
