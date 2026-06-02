@@ -13,7 +13,7 @@ graph = {
 }
 
 def bfs(graph, node):
-  toBeVisited = set([node]) # List to keep track of visited nodes.
+  toBeVisited = set([node]) # List to keep track of visited nodes. Optional for trees, as we won't visit 1 node twice.
   queue = deque([node])     #Initialize a queue
   while queue:
     node = queue.popleft()
